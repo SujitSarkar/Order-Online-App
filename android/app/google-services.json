@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "813857075262",
+    "project_id": "order-online-2023",
+    "storage_bucket": "order-online-2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813857075262:android:16614051a29e7e7c82a16f",
+        "android_client_info": {
+          "package_name": "com.digitafact.order_online_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBImgRy8G3fS83CpdR79BNQGY_zU5MEkqk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

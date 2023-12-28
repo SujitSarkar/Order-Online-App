@@ -1,0 +1,49 @@
+name: order_online_app
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.5
+  http: ^1.1.0
+  fluttertoast: ^8.2.2
+  get_storage: ^2.1.1
+  flutter_inappwebview: ^6.0.0
+  connectivity_plus: ^5.0.2
+  url_launcher: ^6.2.2
+  carousel_slider: ^4.2.1
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  google_sign_in: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+
+  # list giving the asset and other descriptors for the font. For
+  fonts:
+    - family: inter
+      fonts:
+        - asset: assets/font/Inter-Light.ttf
+          weight: 400
+        - asset: assets/font/Inter-Regular.ttf
+          weight: 500
+        - asset: assets/font/Inter-SemiBold.ttf
+          weight: 600
