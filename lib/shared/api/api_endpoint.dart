@@ -1,7 +1,8 @@
 class ApiEndpoint {
   ///Base URL
   static const String baseUrl = 'https://order-online-staging.vercel.app';
-  static const String imageUrlPath = '$baseUrl/storage/settings/sample/';
+  // static const String baseUrl = 'https://api.order-online.digitafact.com';
+  static const String imageUrlPath = '$baseUrl/storage/settings';
 
   ///Auth
   static const String signIn = '/api/auth/login';
@@ -9,4 +10,7 @@ class ApiEndpoint {
   static const String socialLogin = '/api/auth/social-login';
   static const String forgetPassword = '/api/auth/password/email';
   static const String logout = '/api/auth/logout';
+
+  ///Home
+  static const String settings = '/api/setting';
 }

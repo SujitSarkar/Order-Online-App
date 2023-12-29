@@ -19,6 +19,7 @@ class WebViewProvider extends ChangeNotifier {
   void updateUrl(String newUrl) {
     url = newUrl;
     notifyListeners();
+    debugPrint('\n\n Updated URL:::::::::::::::::::::::::::::: $newUrl \n\n');
   }
 
   Future<void> refresh() async {

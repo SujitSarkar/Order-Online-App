@@ -14,8 +14,7 @@ class ApiService {
   }
 
   Map<String, String> headers = {
-    'accept': '*/*',
-    'Content-Type': 'application/json',
+    'Accept': 'application/json',
     'app': 'android'
   };
 
@@ -65,7 +64,8 @@ class ApiService {
 
   ///delete api request
   Future<dynamic> delete(String url) async {
-    http.Response response = await http.delete(Uri.parse(url),headers: headers);
+    http.Response response =
+        await http.delete(Uri.parse(url), headers: headers);
     return _processResponse(response);
   }
 
