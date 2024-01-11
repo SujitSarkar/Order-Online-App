@@ -1,4 +1,5 @@
 import 'package:flutter/Material.dart';
+import 'package:order_online_app/src/features/authentication/repository/auth_repository.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/constants/web_endpoint.dart';
 import '../../../../core/router/app_router.dart';
@@ -35,6 +36,7 @@ class TabBarProvider extends ChangeNotifier {
   Future<void> navigateToWebPage() async {
     final BuildContext context = AppNavigatorKey.key.currentState!.context;
     if (tabIndex == 0) {
+      // await AuthRepository().logout();
       // await Future.delayed(const Duration(milliseconds: 500)).then((value) =>
       //     Navigator.pushNamedAndRemoveUntil(
       //         context, AppRouter.webViewPage, arguments: '', (route) => false));

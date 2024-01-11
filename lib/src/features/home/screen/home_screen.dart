@@ -6,21 +6,44 @@ import 'package:order_online_app/core/constants/text_size.dart';
 import 'package:order_online_app/core/widgets/loading_widget.dart';
 import 'package:order_online_app/core/widgets/outline_button.dart';
 import 'package:order_online_app/core/widgets/solid_button.dart';
+import 'package:order_online_app/src/features/authentication/repository/auth_repository.dart';
 import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/web_endpoint.dart';
 import '../../../../core/router/app_router.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    final HomeProvider homeProvider = Provider.of(context,listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      homeProvider.initialize();
+    });
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
 
     return Scaffold(
       backgroundColor: AppColor.cardColor,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: ()async{
+            await AuthRepository().logout();
+          },
+          icon: const Icon(Icons.power_settings_new),
+        ),
+      ),
       body: SafeArea(
           child: homeProvider.loading
               ? const Center(child: LoadingWidget())

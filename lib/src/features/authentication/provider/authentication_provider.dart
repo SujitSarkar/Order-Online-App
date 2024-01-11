@@ -160,7 +160,34 @@ class AuthenticationProvider extends ChangeNotifier {
         debugPrint(userCredential!.credential!.accessToken);
         debugPrint(userCredential!.user!.displayName);
         debugPrint(userCredential!.user!.email);
-        // await getLogin();
+
+        final Map<String, dynamic> requestBody = {
+          'authProvider': 'google',
+          'uid': userCredential?.user?.uid,
+          'name': userCredential?.user?.displayName,
+          'email': userCredential?.user?.email
+        };
+
+        await _authRepository.socialLogin(requestBody: requestBody).then(
+            (LoginResponseModel? response) async {
+          if (response != null) {
+            await setData(LocalStorageKey.loginResponseKey,
+                    loginResponseModelToJson(response))
+                .then((value) async {
+              final BuildContext context =
+                  AppNavigatorKey.key.currentState!.context;
+
+              ApiService.instance.addAccessToken(response.accessToken);
+              clearAllData();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, AppRouter.tabBar, (route) => false);
+            }, onError: (error) {
+              showToast(error.toString());
+            });
+          }
+        }, onError: (error) {
+          showToast(error.toString());
+        });
       } else {
         showToast('User data not found');
       }

@@ -33,11 +33,7 @@ class MyApp extends StatelessWidget {
               create: (_) => AuthenticationProvider()),
           ChangeNotifierProvider<TabBarProvider>(
               create: (_) => TabBarProvider()),
-          ChangeNotifierProvider<HomeProvider>(create: (_) {
-            final HomeProvider homeProvider = HomeProvider();
-            homeProvider.initialize();
-            return homeProvider;
-          }),
+          ChangeNotifierProvider<HomeProvider>(create: (_) => HomeProvider()),
           ChangeNotifierProvider<WebViewProvider>(create: (_) {
             final WebViewProvider webViewProvider = WebViewProvider();
             webViewProvider.checkConnectivity();
