@@ -16,23 +16,31 @@ class WebViewProvider extends ChangeNotifier {
   LoginResponseModel? loginResponseModel;
 
   InAppWebViewController? webViewController;
-  late PullToRefreshController pullToRefreshController;
+  late PullToRefreshController pullToRefreshController = PullToRefreshController(
+    settings: PullToRefreshSettings(
+        color: AppColor.secondaryColor, backgroundColor: AppColor.cardColor),
+    onRefresh: () async {
+      await refresh();
+    },
+  );
   String url = WebEndpoint.baseUrl;
   double progress = 0;
   String pageTitle = 'Loading...';
   bool reloading = false;
 
-  Future<void> getLocalData() async{
-    final loginResponseFromLocal = await getData(LocalStorageKey.loginResponseKey);
+  Future<void> getLocalData() async {
+    final loginResponseFromLocal =
+        await getData(LocalStorageKey.loginResponseKey);
     if (loginResponseFromLocal != null) {
       loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
     }
   }
 
-  void updateUrl(String newUrl) {
+  void updateUrl(String newUrl) async{
     url = newUrl;
     notifyListeners();
     debugPrint('\n\n Updated URL:::::::::::::::::::::::::::::: $newUrl \n\n');
+    await setLocalStorage();
   }
 
   Future<void> refresh() async {
@@ -42,6 +50,7 @@ class WebViewProvider extends ChangeNotifier {
       webViewController?.loadUrl(
           urlRequest: URLRequest(url: await webViewController?.getUrl()));
     }
+    await setLocalStorage();
     notifyListeners();
   }
 
@@ -62,15 +71,28 @@ class WebViewProvider extends ChangeNotifier {
     });
   }
 
-  void configureWebViewController(String urlPath) {
+  void configureWebViewController(String urlPath) async{
     url = '${WebEndpoint.baseUrl}$urlPath';
 
     webViewController?.loadUrl(
         urlRequest: URLRequest(url: WebUri.uri(Uri.parse(url))));
-    webViewController?.evaluateJavascript(source: 'localStorage.setItem("accessToken", "${loginResponseModel?.accessToken}");');
   }
 
-  Future<void> configurePullToRefreshController() async{
+  Future<void> setLocalStorage()async{
+    try {
+      await webViewController?.evaluateJavascript(
+          source: "localStorage.setItem('accessToken', '${loginResponseModel?.data?.accessToken}');");
+    } catch (e) {
+      debugPrint('\n\nError save local storage $e\n\n');
+    }
+
+    String? value = await webViewController?.evaluateJavascript(
+        source: "localStorage.getItem('accessToken');"
+    );
+    debugPrint("\n\n\nRetrieved value: $value\n\n\n");
+  }
+
+  void configurePullToRefreshController() {
     pullToRefreshController = PullToRefreshController(
       settings: PullToRefreshSettings(
           color: AppColor.secondaryColor, backgroundColor: AppColor.cardColor),

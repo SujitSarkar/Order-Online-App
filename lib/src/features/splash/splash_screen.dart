@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     await Future.delayed(const Duration(seconds: 2)).then((value) {
-      if (loginResponseModel != null && loginResponseModel.accessToken!=null) {
+      if (loginResponseModel != null && loginResponseModel.data?.accessToken!=null) {
         Navigator.pushNamedAndRemoveUntil(
             context, AppRouter.tabBar, (route) => false);
       } else {

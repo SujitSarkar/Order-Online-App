@@ -96,7 +96,7 @@ class AuthenticationProvider extends ChangeNotifier {
         await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response))
             .then((value) async {
           final BuildContext context = AppNavigatorKey.key.currentState!.context;
-          ApiService.instance.addAccessToken(response.accessToken);
+          ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
           Navigator.pushNamedAndRemoveUntil(
               context, AppRouter.tabBar, (route) => false);
@@ -135,8 +135,8 @@ class AuthenticationProvider extends ChangeNotifier {
         await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response))
             .then((value) async {
           final BuildContext context = AppNavigatorKey.key.currentState!.context;
-          ApiService.instance.addAccessToken(response.accessToken);
-          debugPrint('AssesToken: ${response.accessToken}');
+          ApiService.instance.addAccessToken(response.data?.accessToken);
+          debugPrint('AssesToken: ${response.data?.accessToken}');
           clearAllData();
           Navigator.pushNamedAndRemoveUntil(
               context, AppRouter.tabBar, (route) => false);
@@ -174,7 +174,8 @@ class AuthenticationProvider extends ChangeNotifier {
           'authProvider': 'google',
           'uid': userCredential?.user?.uid,
           'name': userCredential?.user?.displayName,
-          'email': userCredential?.user?.email
+          'email': userCredential?.user?.email,
+          "device_name": "Dev1@CF",
         };
 
         await _authRepository.socialLogin(requestBody: requestBody).then(
@@ -185,7 +186,7 @@ class AuthenticationProvider extends ChangeNotifier {
                 .then((value) async {
               final BuildContext context =
                   AppNavigatorKey.key.currentState!.context;
-              ApiService.instance.addAccessToken(response.accessToken);
+              ApiService.instance.addAccessToken(response.data?.accessToken);
               clearAllData();
               Navigator.pushNamedAndRemoveUntil(
                   context, AppRouter.tabBar, (route) => false);

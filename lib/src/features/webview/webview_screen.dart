@@ -30,7 +30,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     await webViewProvider.getLocalData();
     webViewProvider.configureWebViewController(widget.urlPath);
-    await webViewProvider.configurePullToRefreshController();
+    await webViewProvider.setLocalStorage();
+    // webViewProvider.configurePullToRefreshController();
+
   }
 
   @override

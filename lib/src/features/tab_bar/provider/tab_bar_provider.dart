@@ -62,7 +62,7 @@ class TabBarProvider extends ChangeNotifier {
     final loginResponseFromLocal = await getData(LocalStorageKey.loginResponseKey);
     if (loginResponseFromLocal != null) {
       loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
-      ApiService.instance.addAccessToken(loginResponseModel?.accessToken);
+      ApiService.instance.addAccessToken(loginResponseModel?.data?.accessToken);
     }
   }
 }

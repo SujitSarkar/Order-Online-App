@@ -9,7 +9,7 @@ class HomeRepository {
     SettingsDataModel? result;
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance
-          .get('${WebEndpoint.baseUrl}${ApiEndpoint.settings}');
+          .get('${ApiEndpoint.baseUrl}${ApiEndpoint.settings}');
     }, onSuccess: (response) async {
       debugPrint(response.body);
       result = settingsDataModelFromJson(response.body);

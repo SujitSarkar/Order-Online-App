@@ -77,6 +77,7 @@ class AuthRepository {
       return await ApiService.instance.post(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
     }, onSuccess: (response) async {
+      ApiService.instance.clearAccessToken();
       Navigator.pushNamedAndRemoveUntil(
           AppNavigatorKey.key.currentState!.context, AppRouter.signIn, (route) => false);
     }, onError: (error) {

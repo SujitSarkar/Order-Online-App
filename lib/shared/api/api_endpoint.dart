@@ -1,6 +1,5 @@
 class ApiEndpoint {
   ///Base URL
-  // static const String baseUrl = 'https://order-online-staging.vercel.app';
   static const String baseUrl = 'https://api.order-online.digitafact.com';
   static const String imageUrlPath = '$baseUrl/storage/settings';
 

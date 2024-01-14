@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -7,6 +9,7 @@ import 'error_handler.dart';
 
 class ApiService {
   ApiService._privateConstructor();
+
   static final ApiService instance = ApiService._privateConstructor();
 
   factory ApiService() {
@@ -15,12 +18,20 @@ class ApiService {
 
   Map<String, String> headers = {
     'Content-Type': 'application/json',
-    // 'Accept': '*/*'
-    'Accept': 'application/json'
+    'Accept': 'application/json',
+    'X-App': Platform.isAndroid
+        ? 'android'
+        : Platform.isIOS
+        ? 'iOS'
+        : 'web'
   };
 
   void addAccessToken(String? token) {
     headers.addEntries({'Authorization': 'Bearer $token'}.entries);
+  }
+
+  void clearAccessToken() {
+    headers.remove('Authorization');
   }
 
   Future<void> apiCall(
@@ -95,8 +106,7 @@ class ApiService {
         throw ExpectationException(
             'There is no public email found for this user');
       case 422:
-        throw ExpectationException(
-            'Duplicate Credentials');
+        throw ExpectationException('Duplicate Credentials');
       case 409:
         throw UnauthorizedException('Duplicate credential');
       case 500:
