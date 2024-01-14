@@ -4,6 +4,7 @@ import '../../../../core/constants/web_endpoint.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/local_storage.dart';
+import '../../../../shared/api/api_service.dart';
 import '../../authentication/model/login_response_model.dart';
 import '../../home/screen/home_screen.dart';
 import '../screen/order_screen.dart';
@@ -19,7 +20,7 @@ class TabBarProvider extends ChangeNotifier {
       [const HomeScreen(), const OrderScreen(), const ProfileScreen()];
 
   void initialize() async {
-    getLocalData();
+    await getLocalData();
     navigateToWebPage();
   }
 
@@ -35,6 +36,7 @@ class TabBarProvider extends ChangeNotifier {
   Future<void> navigateToWebPage() async {
     final BuildContext context = AppNavigatorKey.key.currentState!.context;
     if (tabIndex == 0) {
+      // await AuthRepository().logout();
       // await Future.delayed(const Duration(milliseconds: 500)).then((value) =>
       //     Navigator.pushNamedAndRemoveUntil(
       //         context, AppRouter.webViewPage, arguments: '', (route) => false));
@@ -56,10 +58,11 @@ class TabBarProvider extends ChangeNotifier {
   bool canPop() => AppNavigatorKey.key.currentState!.canPop();
 
   ///Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-  void getLocalData() {
-    final loginResponseFromLocal = getData(LocalStorageKey.loginResponseKey);
+  Future<void> getLocalData() async {
+    final loginResponseFromLocal = await getData(LocalStorageKey.loginResponseKey);
     if (loginResponseFromLocal != null) {
       loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
+      ApiService.instance.addAccessToken(loginResponseModel?.accessToken);
     }
   }
 }

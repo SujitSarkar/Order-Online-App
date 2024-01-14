@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_online_app/src/features/authentication/model/login_response_model.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/local_storage_key.dart';
 import '../../../core/router/app_router.dart';
@@ -19,13 +20,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> onInit() async {
-    final loginResponseFromLocal = getData(LocalStorageKey.loginResponseKey);
+    LoginResponseModel? loginResponseModel;
+    final loginResponseFromLocal = await getData(LocalStorageKey.loginResponseKey);
+    if (loginResponseFromLocal != null) {
+      loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
+    }
 
     await Future.delayed(const Duration(seconds: 2)).then((value) {
-      // Navigator.pushNamedAndRemoveUntil(
-      //     context, AppRouter.tabBar, (route) => false);
-
-      if (loginResponseFromLocal != null) {
+      if (loginResponseModel != null && loginResponseModel.accessToken!=null) {
         Navigator.pushNamedAndRemoveUntil(
             context, AppRouter.tabBar, (route) => false);
       } else {

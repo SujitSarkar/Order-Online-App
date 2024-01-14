@@ -47,6 +47,7 @@ class SignupScreen extends StatelessWidget {
                   hintText: 'Enter your full name',
                   required: true,
                   textInputType: TextInputType.name,
+                  textCapitalization: TextCapitalization.words,
                 ),
                 const SizedBox(height: 20),
                 TextFormFieldWidget(

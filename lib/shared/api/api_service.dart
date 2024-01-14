@@ -14,8 +14,9 @@ class ApiService {
   }
 
   Map<String, String> headers = {
-    'Accept': 'application/json',
-    'app': 'android'
+    'Content-Type': 'application/json',
+    // 'Accept': '*/*'
+    'Accept': 'application/json'
   };
 
   void addAccessToken(String? token) {
@@ -93,6 +94,9 @@ class ApiService {
       case 417:
         throw ExpectationException(
             'There is no public email found for this user');
+      case 422:
+        throw ExpectationException(
+            'Duplicate Credentials');
       case 409:
         throw UnauthorizedException('Duplicate credential');
       case 500:

@@ -12,6 +12,6 @@ bool? getBool(String key) => GetStorage().read(key);
 
 double? getDouble(String key) => GetStorage().read(key);
 
-dynamic getData(String key) => GetStorage().read(key);
+Future<dynamic> getData(String key) async => await GetStorage().read(key);
 
 Future<void> clearLocalData() async => await GetStorage().erase();

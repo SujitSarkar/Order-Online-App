@@ -2,12 +2,18 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-
+import 'package:order_online_app/core/utils/app_navigator_key.dart';
+import 'package:order_online_app/src/features/authentication/provider/authentication_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
+import '../../../core/constants/local_storage_key.dart';
 import '../../../core/constants/web_endpoint.dart';
+import '../../../core/utils/local_storage.dart';
+import '../authentication/model/login_response_model.dart';
 
 class WebViewProvider extends ChangeNotifier {
   bool connected = false;
+  LoginResponseModel? loginResponseModel;
 
   InAppWebViewController? webViewController;
   late PullToRefreshController pullToRefreshController;
@@ -15,6 +21,13 @@ class WebViewProvider extends ChangeNotifier {
   double progress = 0;
   String pageTitle = 'Loading...';
   bool reloading = false;
+
+  Future<void> getLocalData() async{
+    final loginResponseFromLocal = await getData(LocalStorageKey.loginResponseKey);
+    if (loginResponseFromLocal != null) {
+      loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
+    }
+  }
 
   void updateUrl(String newUrl) {
     url = newUrl;
@@ -54,9 +67,10 @@ class WebViewProvider extends ChangeNotifier {
 
     webViewController?.loadUrl(
         urlRequest: URLRequest(url: WebUri.uri(Uri.parse(url))));
+    webViewController?.evaluateJavascript(source: 'localStorage.setItem("accessToken", "${loginResponseModel?.accessToken}");');
   }
 
-  void configurePullToRefreshController() {
+  Future<void> configurePullToRefreshController() async{
     pullToRefreshController = PullToRefreshController(
       settings: PullToRefreshSettings(
           color: AppColor.secondaryColor, backgroundColor: AppColor.cardColor),

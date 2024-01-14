@@ -12,11 +12,12 @@ class ErrorHandler {
     } else if (exception is UnauthorizedException) {
       //If access token has un authorised then logout
 
-      if (ApiService.instance.headers['Authorization'] != null &&
-          ApiService.instance.headers['Authorization']!.isNotEmpty) {
-        await AuthRepository().logout();
-        showToast(exception.message!);
-      }
+      // if (ApiService.instance.headers['Authorization'] != null &&
+      //     ApiService.instance.headers['Authorization']!.isNotEmpty) {
+      //   await AuthRepository().logout();
+      //   showToast(exception.message!);
+      // }
+      showToast(exception.message!);
       showToast(exception.message!);
     } else if (exception is InvalidCredentialsException) {
       showToast(exception.message!);

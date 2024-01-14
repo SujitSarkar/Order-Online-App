@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:order_online_app/shared/api/api_service.dart';
+import 'package:order_online_app/src/features/authentication/model/reset_password_model.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/app_toast.dart';
 import '../../../../core/utils/local_storage.dart';
 import '../../../../core/utils/validator.dart';
+import '../../../../shared/api/api_service.dart';
 import '../model/login_response_model.dart';
 import '../repository/auth_repository.dart';
 
@@ -18,6 +19,7 @@ class AuthenticationProvider extends ChangeNotifier {
   bool facebookLoading = false;
   final GlobalKey<FormState> signupFormKey = GlobalKey();
   final GlobalKey<FormState> signInFormKey = GlobalKey();
+  final GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -28,7 +30,6 @@ class AuthenticationProvider extends ChangeNotifier {
 
   bool rememberMe = true;
   bool privacyPolicyUrl = true;
-  bool sentPasswordResetLink = false;
   late UserCredential? userCredential;
 
   ///Functions::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -65,11 +66,11 @@ class AuthenticationProvider extends ChangeNotifier {
       return;
     }
     if (!validatePassword(passwordController.text)) {
-      showToast('Password must be at least 6 characters');
+      showToast('Password must be at least 8 characters');
       return;
     }
     if (!validatePassword(confirmPasswordController.text)) {
-      showToast('Password must be at least 6 characters');
+      showToast('Password must be at least 8 characters');
       return;
     }
     if (passwordController.text != confirmPasswordController.text) {
@@ -79,19 +80,29 @@ class AuthenticationProvider extends ChangeNotifier {
     loading = true;
     notifyListeners();
     Map<String, dynamic> requestBody = {
-      "email": emailController.text,
-      "name": nameController.text,
-      "password": passwordController.text,
-      "password_confirmation": confirmPasswordController.text,
+      "email": emailController.text.trim(),
+      "name": nameController.text.trim(),
+      "phone": phoneController.text.trim(),
+      "password": passwordController.text.trim(),
+      "password_confirmation": confirmPasswordController.text.trim(),
       "device_name": "Dev1@CF"
     };
+    debugPrint(requestBody.toString());
 
-    await _authRepository.signup(requestBody: requestBody).then((response) {
+    await _authRepository.signup(requestBody: requestBody).then((response) async{
       loading = false;
       notifyListeners();
       if (response != null) {
-        clearAllData();
-        Navigator.pop(AppNavigatorKey.key.currentState!.context);
+        await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response))
+            .then((value) async {
+          final BuildContext context = AppNavigatorKey.key.currentState!.context;
+          ApiService.instance.addAccessToken(response.accessToken);
+          clearAllData();
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRouter.tabBar, (route) => false);
+        }, onError: (error) {
+          showToast(error.toString());
+        });
       }
     });
   }
@@ -104,30 +115,28 @@ class AuthenticationProvider extends ChangeNotifier {
       showToast('Invalid email address');
       return;
     }
-    if (!validatePassword(passwordController.text)) {
-      showToast('Password must be at least 6 characters');
-      return;
-    }
+    // if (!validatePassword(passwordController.text)) {
+    //   showToast('Password must be at least 8 characters');
+    //   return;
+    // }
     loading = true;
     notifyListeners();
 
     Map<String, dynamic> requestBody = {
-      "email": emailController.text,
-      "password": passwordController.text,
+      "email": emailController.text.trim(),
+      "password": passwordController.text.trim(),
       "device_name": "Dev1@CF",
-      "remember": false
+      "remember": 'false'
     };
 
     await _authRepository.signIn(requestBody: requestBody).then(
         (LoginResponseModel? response) async {
       if (response != null) {
-        await setData(LocalStorageKey.loginResponseKey,
-                loginResponseModelToJson(response))
+        await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response))
             .then((value) async {
-          final BuildContext context =
-              AppNavigatorKey.key.currentState!.context;
-
+          final BuildContext context = AppNavigatorKey.key.currentState!.context;
           ApiService.instance.addAccessToken(response.accessToken);
+          debugPrint('AssesToken: ${response.accessToken}');
           clearAllData();
           Navigator.pushNamedAndRemoveUntil(
               context, AppRouter.tabBar, (route) => false);
@@ -157,10 +166,36 @@ class AuthenticationProvider extends ChangeNotifier {
       userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
       if (userCredential != null) {
-        debugPrint(userCredential!.credential!.accessToken);
+        debugPrint(userCredential!.user!.uid);
         debugPrint(userCredential!.user!.displayName);
         debugPrint(userCredential!.user!.email);
-        // await getLogin();
+
+        final Map<String, dynamic> requestBody = {
+          'authProvider': 'google',
+          'uid': userCredential?.user?.uid,
+          'name': userCredential?.user?.displayName,
+          'email': userCredential?.user?.email
+        };
+
+        await _authRepository.socialLogin(requestBody: requestBody).then(
+            (LoginResponseModel? response) async {
+          if (response != null) {
+            await setData(LocalStorageKey.loginResponseKey,
+                    loginResponseModelToJson(response))
+                .then((value) async {
+              final BuildContext context =
+                  AppNavigatorKey.key.currentState!.context;
+              ApiService.instance.addAccessToken(response.accessToken);
+              clearAllData();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, AppRouter.tabBar, (route) => false);
+            }, onError: (error) {
+              showToast(error.toString());
+            });
+          }
+        }, onError: (error) {
+          showToast(error.toString());
+        });
       } else {
         showToast('User data not found');
       }
@@ -169,6 +204,32 @@ class AuthenticationProvider extends ChangeNotifier {
       debugPrint('Google Login Error: ${error.toString()}');
     }
     googleLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> resetPasswordButtonOnTap() async {
+    if (!resetPasswordFormKey.currentState!.validate()) {
+      return;
+    }
+    if (!validateEmail(emailController.text)) {
+      showToast('Invalid email address');
+      return;
+    }
+    loading = true;
+    notifyListeners();
+
+    Map<String, dynamic> requestBody = {"email": emailController.text.trim()};
+
+    await _authRepository.resetPassword(requestBody: requestBody).then(
+            (ResetPasswordResponseModel? response) async {
+          if (response != null && response.status==true) {
+            showToast(response.message??'');
+            Navigator.pop(AppNavigatorKey.key.currentState!.context);
+          }
+        }, onError: (error) {
+      showToast(error.toString());
+    });
+    loading = false;
     notifyListeners();
   }
 }
