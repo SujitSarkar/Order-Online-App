@@ -28,8 +28,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Future<void> _initialize() async {
     final WebViewProvider webViewProvider = Provider.of(context, listen: false);
 
+    await webViewProvider.getLocalData();
     webViewProvider.configureWebViewController(widget.urlPath);
-    webViewProvider.configurePullToRefreshController();
+    await webViewProvider.configurePullToRefreshController();
   }
 
   @override

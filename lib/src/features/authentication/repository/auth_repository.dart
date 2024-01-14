@@ -6,6 +6,7 @@ import '../../../../core/utils/local_storage.dart';
 import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../model/login_response_model.dart';
+import '../model/reset_password_model.dart';
 
 class AuthRepository {
   Future<LoginResponseModel?> signIn(
@@ -24,15 +25,15 @@ class AuthRepository {
     return result;
   }
 
-  Future<String?> signup({required Map<String, dynamic> requestBody}) async {
-    String? result;
+  Future<LoginResponseModel?> signup({required Map<String, dynamic> requestBody}) async {
+    LoginResponseModel? result;
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.signup}',
           body: requestBody);
     }, onSuccess: (response) async {
-      result = response.body;
-      print(response.body);
+      debugPrint(response.body);
+      result = loginResponseModelFromJson(response.body);
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
     });
@@ -47,6 +48,22 @@ class AuthRepository {
           body: requestBody);
     }, onSuccess: (response) async {
       result = loginResponseModelFromJson(response.body);
+    }, onError: (error) {
+      debugPrint(error.message ?? 'Something went wrong');
+    });
+    return result;
+  }
+
+  Future<ResetPasswordResponseModel?> resetPassword(
+      {required Map<String, dynamic> requestBody}) async {
+    ResetPasswordResponseModel? result;
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.forgetPassword}',
+          body: requestBody);
+    }, onSuccess: (response) async {
+      debugPrint(response.body);
+      result = resetPasswordResponseModelFromJson(response.body);
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
     });

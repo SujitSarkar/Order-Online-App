@@ -30,6 +30,11 @@ class UnauthorizedException extends AppException {
       : super(message: message,);
 }
 
+class DuplicateCredentialException extends AppException {
+  DuplicateCredentialException([String? message])
+      : super(message: message,);
+}
+
 class ExpectationException extends AppException {
   ExpectationException([String? message])
       : super(message: message);

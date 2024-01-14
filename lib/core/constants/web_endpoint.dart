@@ -1,6 +1,5 @@
 class WebEndpoint {
   static const String baseUrl = 'https://order-online-staging.vercel.app';
-  // static const String baseUrl = 'https://order-online.digitafact.com';
   static const String orderUrl = '/order';
   static const String reservationUrl = '/reservation';
   static const String profileUrl = '/profile';
