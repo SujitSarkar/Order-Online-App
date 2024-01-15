@@ -199,7 +199,9 @@ class SignupScreen extends StatelessWidget {
 
                 ///Google Login Button
                 SolidButton(
-                    onTap: () {},
+                    onTap: () async {
+                      await authProvider.signInWithGoogle();
+                    },
                     backgroundColor: AppColor.googleButtonColor,
                     child: Row(
                       children: [
@@ -217,8 +219,10 @@ class SignupScreen extends StatelessWidget {
                               )),
                           child: Image.asset('assets/images/google_logo.png'),
                         ),
-                        const Expanded(
-                          child: Text(
+                        Expanded(
+                          child: authProvider.googleLoading
+                              ? const Center(child: LoadingWidget(color: Colors.white))
+                              : const Text(
                             'SIGN IN WITH GOOGLE',
                             textAlign: TextAlign.center,
                             style: TextStyle(
