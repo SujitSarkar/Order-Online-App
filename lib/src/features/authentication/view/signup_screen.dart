@@ -30,9 +30,14 @@ class SignupScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: size.height * .02),
-                const Center(child: Text(AppString.appName,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColor.primaryColor,fontSize: 32,fontWeight: FontWeight.bold)),),
+                const Center(
+                  child: Text(AppString.appName,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: AppColor.primaryColor,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold)),
+                ),
                 SizedBox(height: size.height * .01),
                 const Text('Welcome to ${AppString.appName}! 👏',
                     style: TextStyle(
@@ -106,9 +111,10 @@ class SignupScreen extends StatelessWidget {
                                   const TextStyle(color: AppColor.primaryColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
-                                Navigator.pushNamed(context, AppRouter.privacyTerms,arguments: '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
-                                  // await launchInWebView(
-                                  //     '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
+                                  Navigator.pushNamed(
+                                      context, AppRouter.privacyTerms,
+                                      arguments:
+                                          '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
                                 },
                             ),
                             const TextSpan(text: ' & '),
@@ -118,9 +124,10 @@ class SignupScreen extends StatelessWidget {
                                   const TextStyle(color: AppColor.primaryColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
-                                  Navigator.pushNamed(context, AppRouter.privacyTerms,arguments: '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
-                                  // await launchInWebView(
-                                  //     '${WebEndpoint.baseUrl}${WebEndpoint.termsAndConditionUrl}');
+                                  Navigator.pushNamed(
+                                      context, AppRouter.privacyTerms,
+                                      arguments:
+                                          '${WebEndpoint.baseUrl}${WebEndpoint.termsAndConditionUrl}');
                                 },
                             ),
                           ],
