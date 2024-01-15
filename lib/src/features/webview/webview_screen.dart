@@ -9,7 +9,6 @@ import '../../../core/widgets/no_internet_screen.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key, required this.urlPath});
-
   final String urlPath;
 
   @override

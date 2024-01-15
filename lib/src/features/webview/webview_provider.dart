@@ -2,9 +2,6 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:order_online_app/core/utils/app_navigator_key.dart';
-import 'package:order_online_app/src/features/authentication/provider/authentication_provider.dart';
-import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/local_storage_key.dart';
 import '../../../core/constants/web_endpoint.dart';
@@ -90,16 +87,6 @@ class WebViewProvider extends ChangeNotifier {
         source: "localStorage.getItem('accessToken');"
     );
     debugPrint("\n\n\nRetrieved value: $value\n\n\n");
-  }
-
-  void configurePullToRefreshController() {
-    pullToRefreshController = PullToRefreshController(
-      settings: PullToRefreshSettings(
-          color: AppColor.secondaryColor, backgroundColor: AppColor.cardColor),
-      onRefresh: () async {
-        await refresh();
-      },
-    );
   }
 
   void updateProgress(InAppWebViewController? controller, int? newProgress) {
