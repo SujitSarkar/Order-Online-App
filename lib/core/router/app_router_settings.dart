@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_online_app/src/features/privacy/privacy_and_terms_screen.dart';
 import '../../src/features/authentication/view/forgot_password_screen.dart';
 import '../../src/features/authentication/view/signup_screen.dart';
 import '../../src/features/authentication/view/signin_screen.dart';
@@ -38,6 +39,14 @@ class GeneratedRoute {
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
             const ForgotPasswordScreen());
+
+      case AppRouter.privacyTerms:
+        final String url = settings.arguments as String;
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+            PrivacyAndTermsScreen(url: url));
 
       case AppRouter.tabBar:
         return PageRouteBuilder(

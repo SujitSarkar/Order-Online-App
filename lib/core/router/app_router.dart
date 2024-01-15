@@ -5,6 +5,7 @@ class AppRouter {
   static const String tabBar = '/tab-bar';
   static const String signIn = '/signIn';
   static const String signup = '/signup';
+  static const String privacyTerms = '/privacy_terms';
   static const String forgotPassword = '/forgot-password';
   static const String resetPassword = '/reset-password';
   static const String otpScreen = '/otp-screen';
