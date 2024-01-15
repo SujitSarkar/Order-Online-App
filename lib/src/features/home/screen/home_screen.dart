@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/Material.dart';
 import 'package:order_online_app/core/constants/app_color.dart';
@@ -9,7 +10,6 @@ import 'package:order_online_app/core/widgets/solid_button.dart';
 import 'package:order_online_app/src/features/authentication/repository/auth_repository.dart';
 import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/constants/web_endpoint.dart';
 import '../../../../core/router/app_router.dart';
 
@@ -23,26 +23,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    final HomeProvider homeProvider = Provider.of(context,listen: false);
+    final HomeProvider homeProvider = Provider.of(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       homeProvider.initialize();
     });
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
 
     return Scaffold(
       backgroundColor: AppColor.cardColor,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: ()async{
-            await AuthRepository().logout();
-          },
-          icon: const Icon(Icons.power_settings_new),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await AuthRepository().logout();
+        },
+        child: const Icon(Icons.logout),
       ),
       body: SafeArea(
           child: homeProvider.loading
@@ -65,10 +64,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-                              Image.network(imageUrl,
-                                  fit: BoxFit.cover,
+                              CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  placeholder: (context, url) => Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        color: Colors.grey.shade300),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          color: Colors.grey.shade300),
                                   width: double.infinity,
-                                  height: double.infinity),
+                                  height: double.infinity,
+                                  fit: BoxFit.cover),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,

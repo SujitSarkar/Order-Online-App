@@ -29,10 +29,12 @@ class SignInScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: size.height * .02),
-                Center(
+                const Center(
                     child: Hero(
                         tag: 'splashToSignIn',
-                        child: Image.asset('assets/images/splash_logo.png'))),
+                        child: Text(AppString.appName,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: AppColor.primaryColor, fontSize: 32,fontWeight: FontWeight.bold)),)),
                 SizedBox(height: size.height * .01),
                 const Text('Welcome to ${AppString.appName}! 👏',
                     style: TextStyle(

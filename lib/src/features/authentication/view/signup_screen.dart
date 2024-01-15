@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:order_online_app/core/router/app_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/constants/web_endpoint.dart';
-import '../../../../core/utils/webview_launcher.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/solid_button.dart';
 import '../../../../core/widgets/text_field_widget.dart';
@@ -30,7 +30,9 @@ class SignupScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: size.height * .02),
-                Center(child: Image.asset('assets/images/splash_logo.png')),
+                const Center(child: Text(AppString.appName,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColor.primaryColor,fontSize: 32,fontWeight: FontWeight.bold)),),
                 SizedBox(height: size.height * .01),
                 const Text('Welcome to ${AppString.appName}! 👏',
                     style: TextStyle(
@@ -104,8 +106,9 @@ class SignupScreen extends StatelessWidget {
                                   const TextStyle(color: AppColor.primaryColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
-                                  await launchInWebView(
-                                      '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
+                                Navigator.pushNamed(context, AppRouter.privacyTerms,arguments: '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
+                                  // await launchInWebView(
+                                  //     '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
                                 },
                             ),
                             const TextSpan(text: ' & '),
@@ -115,8 +118,9 @@ class SignupScreen extends StatelessWidget {
                                   const TextStyle(color: AppColor.primaryColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
-                                  await launchInWebView(
-                                      '${WebEndpoint.baseUrl}${WebEndpoint.termsAndConditionUrl}');
+                                  Navigator.pushNamed(context, AppRouter.privacyTerms,arguments: '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
+                                  // await launchInWebView(
+                                  //     '${WebEndpoint.baseUrl}${WebEndpoint.termsAndConditionUrl}');
                                 },
                             ),
                           ],
