@@ -21,7 +21,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Form(
-            key: authProvider.resetPasswordFormKey,
+            // key: authProvider.resetPasswordFormKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

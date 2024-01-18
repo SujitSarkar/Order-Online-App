@@ -9,47 +9,20 @@ import '../../../core/utils/local_storage.dart';
 import '../authentication/model/login_response_model.dart';
 
 class WebViewProvider extends ChangeNotifier {
-  bool connected = false;
+  bool connected = true;
   LoginResponseModel? loginResponseModel;
 
   InAppWebViewController? webViewController;
-  late PullToRefreshController pullToRefreshController = PullToRefreshController(
+  late PullToRefreshController pullToRefreshController =
+      PullToRefreshController(
     settings: PullToRefreshSettings(
         color: AppColor.secondaryColor, backgroundColor: AppColor.cardColor),
-    onRefresh: () async {
-      await refresh();
-    },
+    onRefresh: () async => await refresh(),
   );
   String url = WebEndpoint.baseUrl;
   double progress = 0;
   String pageTitle = 'Loading...';
   bool reloading = false;
-
-  Future<void> getLocalData() async {
-    final loginResponseFromLocal =
-        await getData(LocalStorageKey.loginResponseKey);
-    if (loginResponseFromLocal != null) {
-      loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
-    }
-  }
-
-  void updateUrl(String newUrl) async{
-    url = newUrl;
-    notifyListeners();
-    debugPrint('\n\n Updated URL:::::::::::::::::::::::::::::: $newUrl \n\n');
-    await setLocalStorage();
-  }
-
-  Future<void> refresh() async {
-    if (Platform.isAndroid) {
-      webViewController?.reload();
-    } else if (Platform.isIOS) {
-      webViewController?.loadUrl(
-          urlRequest: URLRequest(url: await webViewController?.getUrl()));
-    }
-    await setLocalStorage();
-    notifyListeners();
-  }
 
   Future<void> checkConnectivity() async {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
@@ -68,25 +41,52 @@ class WebViewProvider extends ChangeNotifier {
     });
   }
 
-  void configureWebViewController(String urlPath) async{
+  Future<void> getLocalData() async {
+    final loginResponseFromLocal =
+        await getData(LocalStorageKey.loginResponseKey);
+    if (loginResponseFromLocal != null) {
+      loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
+    }
+  }
+
+  void updateUrl(String newUrl) async {
+    url = newUrl;
+    notifyListeners();
+    debugPrint('\n\n Updated URL:::::::::::::::::::::::::::::: $newUrl \n\n');
+    // await setLocalStorage();
+  }
+
+  Future<void> refresh() async {
+    if (Platform.isAndroid) {
+      webViewController?.reload();
+    } else if (Platform.isIOS) {
+      webViewController?.loadUrl(
+          urlRequest: URLRequest(url: await webViewController?.getUrl()));
+    }
+    // await setLocalStorage();
+    notifyListeners();
+  }
+
+
+  void configureWebViewController(String urlPath) async {
     url = '${WebEndpoint.baseUrl}$urlPath';
 
     webViewController?.loadUrl(
         urlRequest: URLRequest(url: WebUri.uri(Uri.parse(url))));
   }
 
-  Future<void> setLocalStorage()async{
-    try {
-      await webViewController?.evaluateJavascript(
-          source: "localStorage.setItem('accessToken', '${loginResponseModel?.data?.accessToken}');");
-    } catch (e) {
-      debugPrint('\n\nError save local storage $e\n\n');
-    }
+  Future<void> setLocalStorage() async {
+    await webViewController?.evaluateJavascript(
+        source: "localStorage.setItem('accessToken', '${loginResponseModel?.data?.accessToken}');");
 
     String? value = await webViewController?.evaluateJavascript(
-        source: "localStorage.getItem('accessToken');"
-    );
-    debugPrint("\n\n\nRetrieved value: $value\n\n\n");
+        source: "localStorage.getItem('accessToken');");
+    debugPrint("\n\n\nRetrieved value::::::::::::::::::: $value\n\n\n");
+  }
+
+  Future<void> clearLocalStorage() async {
+    await webViewController?.evaluateJavascript(
+        source: "localStorage.setItem('accessToken', '');");
   }
 
   void updateProgress(InAppWebViewController? controller, int? newProgress) {

@@ -20,9 +20,9 @@ class ApiService {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'X-App': Platform.isAndroid
-        ? 'android'
+        ? 'Android'
         : Platform.isIOS
-        ? 'iOS'
+        ? 'IOS'
         : 'web'
   };
 
@@ -86,7 +86,7 @@ class ApiService {
     debugPrint('url:- ${response.request?.url}');
     debugPrint('statusCode:- ${response.statusCode}');
     debugPrint('AccessToken:- ${headers['Authorization']}');
-    // debugPrint('response:- ${response.body}');
+    debugPrint('response:- ${response.body}');
 
     switch (response.statusCode) {
       case 200:

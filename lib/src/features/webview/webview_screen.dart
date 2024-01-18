@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:order_online_app/core/router/app_router.dart';
+import 'package:order_online_app/src/features/authentication/repository/auth_repository.dart';
 import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
@@ -16,7 +18,6 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-  final GlobalKey webViewKey = GlobalKey();
 
   @override
   void initState() {
@@ -78,7 +79,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 children: <Widget>[
               Expanded(
                 child: InAppWebView(
-                  key: webViewKey,
                   initialUrlRequest: URLRequest(
                       url: WebUri.uri(Uri.parse(webViewProvider.url))),
                   pullToRefreshController:
@@ -86,26 +86,31 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   onWebViewCreated: (controller) {
                     webViewProvider.webViewController = controller;
                   },
-                  onProgressChanged:
-                      (InAppWebViewController? controller, int? progress) {
+                  onProgressChanged: (InAppWebViewController? controller, int? progress) {
+                    debugPrint('::::::::::::::onProgressChanged:::::::::::::::::');
+                    if(webViewProvider.url.contains('login')){
+                      Navigator.pushNamed(context, AppRouter.signIn);
+                    }
                     webViewProvider.updateProgress(controller, progress);
                   },
-                  onTitleChanged:
-                      (InAppWebViewController? controller, String? title) {
-                    setState(() => webViewProvider.pageTitle = title!);
-                  },
-                  onLoadStart: (controller, url) {
-                    webViewProvider.updateUrl(url.toString());
-                  },
                   onLoadStop: (controller, url) async {
+                    debugPrint('::::::::::::::onLoadStop:::::::::::::::::');
                     webViewProvider.pullToRefreshController.endRefreshing();
-                    webViewProvider.updateUrl(url.toString());
                   },
                   onReceivedError: (controller, url, error) {
                     webViewProvider.pullToRefreshController.endRefreshing();
                   },
-                  onUpdateVisitedHistory: (controller, url, androidIsReload) {
+                  onUpdateVisitedHistory: (controller, url, androidIsReload) async{
+                    debugPrint('::::::::::::::onUpdateVisitedHistory:::::::::::::::::${url.toString()}');
                     webViewProvider.updateUrl(url.toString());
+                    await webViewProvider.setLocalStorage();
+                  },
+                  onLoadResource: (controller, resource){
+                    debugPrint('::::::::::::::onLoadResource:::::::::::::::::');
+                    if (resource.url.toString().contains("logout")) {
+                      webViewProvider.clearLocalStorage();
+                      AuthRepository().logout();
+                    }
                   },
                 ),
               )

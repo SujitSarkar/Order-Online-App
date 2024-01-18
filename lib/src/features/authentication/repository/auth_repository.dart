@@ -71,15 +71,14 @@ class AuthRepository {
   }
 
   Future<void> logout()async{
-    await clearLocalData();
-    await FirebaseAuth.instance.signOut();
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
     }, onSuccess: (response) async {
       ApiService.instance.clearAccessToken();
-      Navigator.pushNamedAndRemoveUntil(
-          AppNavigatorKey.key.currentState!.context, AppRouter.signIn, (route) => false);
+      await clearLocalData();
+      await FirebaseAuth.instance.signOut().then((value) => Navigator.pushNamedAndRemoveUntil(
+          AppNavigatorKey.key.currentState!.context, AppRouter.signIn, (route) => false));
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
     });

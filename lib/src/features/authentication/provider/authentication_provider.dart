@@ -17,15 +17,14 @@ class AuthenticationProvider extends ChangeNotifier {
   bool loading = false;
   bool googleLoading = false;
   bool facebookLoading = false;
-  final GlobalKey<FormState> signupFormKey = GlobalKey();
-  final GlobalKey<FormState> signInFormKey = GlobalKey();
-  final GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
+  // final GlobalKey<FormState> signupFormKey = GlobalKey();
+  // final GlobalKey<FormState> signInFormKey = GlobalKey();
+  // final GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
   bool rememberMe = true;
@@ -58,9 +57,10 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> signupButtonOnTap() async {
-    if (!signupFormKey.currentState!.validate()) {
-      return;
-    }
+    ApiService.instance.clearAccessToken();
+    // if (!signupFormKey.currentState!.validate()) {
+    //   return;
+    // }
     if (!validateEmail(emailController.text)) {
       showToast('Invalid email address');
       return;
@@ -108,9 +108,10 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> signInButtonOnTap() async {
-    if (!signInFormKey.currentState!.validate()) {
-      return;
-    }
+    ApiService.instance.clearAccessToken();
+    // if (!signInFormKey.currentState!.validate()) {
+    //   return;
+    // }
     if (!validateEmail(emailController.text)) {
       showToast('Invalid email address');
       return;
@@ -152,6 +153,7 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> signInWithGoogle() async {
+    ApiService.instance.clearAccessToken();
     googleLoading = true;
     notifyListeners();
     try {
@@ -209,9 +211,10 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> resetPasswordButtonOnTap() async {
-    if (!resetPasswordFormKey.currentState!.validate()) {
-      return;
-    }
+    ApiService.instance.clearAccessToken();
+    // if (!resetPasswordFormKey.currentState!.validate()) {
+    //   return;
+    // }
     if (!validateEmail(emailController.text)) {
       showToast('Invalid email address');
       return;
