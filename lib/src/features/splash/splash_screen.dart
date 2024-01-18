@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:order_online_app/core/constants/app_string.dart';
 import 'package:order_online_app/src/features/authentication/model/login_response_model.dart';
@@ -14,10 +16,18 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final StreamController<int> _controller = StreamController<int>();
+
   @override
   void initState() {
     onInit();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
   }
 
   Future<void> onInit() async {
@@ -28,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
       loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
     }
 
-    await Future.delayed(const Duration(seconds: 2)).then((value) {
+    await Future.delayed(const Duration(milliseconds: 1200)).then((value) {
       if (loginResponseModel != null &&
           loginResponseModel.data?.accessToken != null) {
         Navigator.pushNamedAndRemoveUntil(
