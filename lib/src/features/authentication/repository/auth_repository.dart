@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
+import 'package:order_online_app/src/features/webview/webview_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/local_storage.dart';
@@ -71,16 +73,21 @@ class AuthRepository {
   }
 
   Future<void> logout()async{
-    await ApiService.instance.apiCall(execute: () async {
-      return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
-    }, onSuccess: (response) async {
-      ApiService.instance.clearAccessToken();
-      await clearLocalData();
-      await FirebaseAuth.instance.signOut().then((value) => Navigator.pushNamedAndRemoveUntil(
-          AppNavigatorKey.key.currentState!.context, AppRouter.signIn, (route) => false));
-    }, onError: (error) {
-      debugPrint(error.message ?? 'Something went wrong');
-    });
+    final WebViewProvider webViewProvider = Provider.of(AppNavigatorKey.key.currentState!.context);
+    ApiService.instance.clearAccessToken();
+    await clearLocalData();
+    await FirebaseAuth.instance.signOut();
+    await webViewProvider.clearLocalStorage();
+    // await ApiService.instance.apiCall(execute: () async {
+    //   return await ApiService.instance.post(
+    //       '${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
+    // }, onSuccess: (response) async {
+    //   ApiService.instance.clearAccessToken();
+    //   await clearLocalData();
+    //   await FirebaseAuth.instance.signOut().then((value) => Navigator.pushNamedAndRemoveUntil(
+    //       AppNavigatorKey.key.currentState!.context, AppRouter.signIn, (route) => false));
+    // }, onError: (error) {
+    //   debugPrint(error.message ?? 'Something went wrong');
+    // });
   }
 }
