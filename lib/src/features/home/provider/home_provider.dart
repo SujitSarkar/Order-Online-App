@@ -18,8 +18,7 @@ class HomeProvider extends ChangeNotifier {
     loading = true;
     notifyListeners();
 
-    await _homeRepository.getAppSettings().then(
-        (SettingsDataModel? response) async {
+    await _homeRepository.getAppSettings().then((SettingsDataModel? response) async {
       if (response != null) {
         sliderImageUrlList = [];
         settingsDataModel = response;

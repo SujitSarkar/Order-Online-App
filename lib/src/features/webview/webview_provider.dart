@@ -76,12 +76,14 @@ class WebViewProvider extends ChangeNotifier {
   }
 
   Future<void> setLocalStorage() async {
-    await webViewController?.evaluateJavascript(
-        source: "localStorage.setItem('accessToken', '${loginResponseModel?.data?.accessToken}');");
+    if(loginResponseModel?.data?.accessToken!=null){
+      await webViewController?.evaluateJavascript(
+          source: "localStorage.setItem('accessToken', '${loginResponseModel?.data?.accessToken}');");
+    }
 
     String? value = await webViewController?.evaluateJavascript(
         source: "localStorage.getItem('accessToken');");
-    debugPrint("\n\n\nRetrieved value::::::::::::::::::: $value\n\n\n");
+    debugPrint("\n\n\nRetrieved localStorage::::::::::::::::::: $value\n\n\n");
   }
 
   Future<void> clearLocalStorage() async {

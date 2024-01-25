@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:order_online_app/core/router/app_router.dart';
-import 'package:order_online_app/src/features/authentication/repository/auth_repository.dart';
 import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
@@ -27,9 +25,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   Future<void> _initialize() async {
     final WebViewProvider webViewProvider = Provider.of(context, listen: false);
-
-    await webViewProvider.getLocalData();
     webViewProvider.configureWebViewController(widget.urlPath);
+    await webViewProvider.getLocalData();
     await webViewProvider.setLocalStorage();
     // webViewProvider.configurePullToRefreshController();
 
@@ -75,14 +72,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Column(
-                children: <Widget>[
+            Column(children: <Widget>[
               Expanded(
                 child: InAppWebView(
                   initialUrlRequest: URLRequest(
                       url: WebUri.uri(Uri.parse(webViewProvider.url))),
-                  pullToRefreshController:
-                      webViewProvider.pullToRefreshController,
+                  pullToRefreshController: webViewProvider.pullToRefreshController,
                   onWebViewCreated: (controller) {
                     webViewProvider.webViewController = controller;
                     webViewProvider.webViewController?.addJavaScriptHandler(
@@ -102,11 +97,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
                       },
                     );
                   },
+                  initialSettings: InAppWebViewSettings(javaScriptEnabled: true),
+
                   onProgressChanged: (InAppWebViewController? controller, int? progress) {
                     debugPrint('::::::::::::::onProgressChanged:::::::::::::::::');
-                    if(webViewProvider.url.contains('login')){
-                      Navigator.pushNamed(context, AppRouter.signIn);
-                    }
                     webViewProvider.updateProgress(controller, progress);
                   },
                   onLoadStop: (controller, url) async {
@@ -123,10 +117,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   },
                   onLoadResource: (controller, resource){
                     debugPrint('::::::::::::::onLoadResource:::::::::::::::::');
-                    if (resource.url.toString().contains("logout")) {
-                      webViewProvider.clearLocalStorage();
-                      AuthRepository().logout();
-                    }
+                    debugPrint('::::::::::::::${resource.url}:::::::::::::::::');
                   },
                 ),
               )
