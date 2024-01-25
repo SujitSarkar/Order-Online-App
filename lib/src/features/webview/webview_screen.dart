@@ -85,6 +85,22 @@ class _WebViewScreenState extends State<WebViewScreen> {
                       webViewProvider.pullToRefreshController,
                   onWebViewCreated: (controller) {
                     webViewProvider.webViewController = controller;
+                    webViewProvider.webViewController?.addJavaScriptHandler(
+                      handlerName: 'callNativeLogin',
+                      callback: (args) {
+                        // Handle data from JavaScript
+                        print('Data from JavaScript Login()::::::: $args');
+                        // Call your Flutter method here with args
+                      },
+                    );
+                    webViewProvider.webViewController?.addJavaScriptHandler(
+                      handlerName: 'callNativeLogout',
+                      callback: (args) {
+                        // Handle data from JavaScript
+                        print('Data from JavaScript Logout()::::::: $args');
+                        // Call your Flutter method here with args
+                      },
+                    );
                   },
                   onProgressChanged: (InAppWebViewController? controller, int? progress) {
                     debugPrint('::::::::::::::onProgressChanged:::::::::::::::::');
