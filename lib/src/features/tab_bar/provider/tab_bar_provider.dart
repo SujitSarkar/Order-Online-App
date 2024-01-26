@@ -41,17 +41,11 @@ class TabBarProvider extends ChangeNotifier {
       //     Navigator.pushNamedAndRemoveUntil(
       //         context, AppRouter.webViewPage, arguments: '', (route) => false));
     } else if (tabIndex == 1) {
-      Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppRouter.webViewPage,
-          arguments: WebEndpoint.orderUrl,
-          (route) => false);
+      Navigator.pushNamed(context, AppRouter.webViewPage,
+          arguments: WebEndpoint.orderUrl);
     } else if (tabIndex == 2) {
-      Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppRouter.webViewPage,
-          arguments: WebEndpoint.profileUrl,
-          (route) => false);
+      Navigator.pushNamed(context, AppRouter.webViewPage,
+        arguments: WebEndpoint.profileUrl);
     }
   }
 

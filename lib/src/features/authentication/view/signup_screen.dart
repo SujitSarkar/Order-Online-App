@@ -24,7 +24,7 @@ class SignupScreen extends StatelessWidget {
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Form(
-            // key: authProvider.signupFormKey,
+            key: authProvider.signupFormKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

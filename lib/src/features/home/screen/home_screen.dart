@@ -35,12 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColor.cardColor,
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     await AuthRepository().logout();
-      //   },
-      //   child: const Icon(Icons.logout),
-      // ),
       body: SafeArea(
           child: homeProvider.loading
               ? const Center(child: LoadingWidget())
@@ -158,7 +152,123 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   const SizedBox(height: 20),
 
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      children: [
+                        ///Award
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, AppRouter.webViewPage,
+                                  arguments: WebEndpoint.awards);
+                            },
+                            child: Stack(
+                              children: [
+                                Image.asset(
+                                  'assets/images/award.jpg',
+                                  width: size.width,
+                                  height: size.height * .3,
+                                  fit: BoxFit.cover,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: size.width,
+                                  height: size.height * .3,
+                                  color: Colors.black.withOpacity(0.4),
+                                  child: const Text(
+                                    'Award',
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                        height: 1,
+                                        color: Colors.white,
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
 
+                        ///Gallery
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, AppRouter.webViewPage,
+                                  arguments: WebEndpoint.gallery);
+                            },
+                            child: Stack(
+                              children: [
+                                Image.asset(
+                                  'assets/images/gallery.jpg',
+                                  width: size.width,
+                                  height: size.height * .3,
+                                  fit: BoxFit.cover,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: size.width,
+                                  height: size.height * .3,
+                                  color: Colors.black.withOpacity(0.4),
+                                  child: const Text(
+                                    'Gallery',
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                        height: 1,
+                                        color: Colors.white,
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        ///My Order
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, AppRouter.webViewPage,
+                                  arguments: WebEndpoint.orderUrl);
+                            },
+                            child: Stack(
+                              children: [
+                                Image.asset(
+                                  'assets/images/cart.jpg',
+                                  width: size.width,
+                                  height: size.height * .3,
+                                  fit: BoxFit.cover,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: size.width,
+                                  height: size.height * .3,
+                                  color: Colors.black.withOpacity(0.4),
+                                  child: const Text(
+                                    'My Order',
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                        height: 1,
+                                        color: Colors.white,
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
                 ],
               )),
     );

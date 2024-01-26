@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:order_online_app/core/router/app_router.dart';
+import 'package:order_online_app/core/utils/local_storage.dart';
 import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
@@ -9,6 +10,7 @@ import '../../../core/widgets/no_internet_screen.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key, required this.urlPath});
+
   final String urlPath;
 
   @override
@@ -16,7 +18,6 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -28,8 +29,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
     webViewProvider.configureWebViewController(widget.urlPath);
     await webViewProvider.getLocalData();
     await webViewProvider.setLocalStorage();
-    // webViewProvider.configurePullToRefreshController();
-
   }
 
   @override
@@ -42,25 +41,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
         if (canBack) {
           webViewProvider.webViewController!.goBack();
         } else {
-          // ignore: use_build_context_synchronously
-          final shouldExit = await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Do you want to exit?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child:
-                      const Text('No', style: TextStyle(color: Colors.green)),
-                ),
-                TextButton(
-                  onPressed: () => SystemNavigator.pop(),
-                  child: const Text('Yes', style: TextStyle(color: Colors.red)),
-                ),
-              ],
-            ),
-          );
-          return shouldExit ?? false;
+          //ignore: use_build_context_synchronously
+          Navigator.popAndPushNamed(context, AppRouter.tabBar);
         }
       },
       child: Scaffold(
@@ -72,35 +54,38 @@ class _WebViewScreenState extends State<WebViewScreen> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Column(children: <Widget>[
+            Column(
+                children: <Widget>[
               Expanded(
                 child: InAppWebView(
                   initialUrlRequest: URLRequest(
                       url: WebUri.uri(Uri.parse(webViewProvider.url))),
-                  pullToRefreshController: webViewProvider.pullToRefreshController,
+                  pullToRefreshController:
+                      webViewProvider.pullToRefreshController,
                   onWebViewCreated: (controller) {
                     webViewProvider.webViewController = controller;
                     webViewProvider.webViewController?.addJavaScriptHandler(
                       handlerName: 'callNativeLogin',
                       callback: (args) {
-                        // Handle data from JavaScript
-                        print('Data from JavaScript Login()::::::: $args');
-                        // Call your Flutter method here with args
+                        callNativeLogin();
                       },
                     );
                     webViewProvider.webViewController?.addJavaScriptHandler(
                       handlerName: 'callNativeLogout',
                       callback: (args) {
-                        // Handle data from JavaScript
-                        print('Data from JavaScript Logout()::::::: $args');
-                        // Call your Flutter method here with args
+                        callNativeLogout();
                       },
                     );
                   },
-                  initialSettings: InAppWebViewSettings(javaScriptEnabled: true),
-
-                  onProgressChanged: (InAppWebViewController? controller, int? progress) {
-                    debugPrint('::::::::::::::onProgressChanged:::::::::::::::::');
+                  initialSettings: InAppWebViewSettings(
+                    javaScriptEnabled: true,
+                    allowsInlineMediaPlayback: true,
+                    preferredContentMode: UserPreferredContentMode.MOBILE,
+                  ),
+                  onProgressChanged:
+                      (InAppWebViewController? controller, int? progress) {
+                    debugPrint(
+                        '::::::::::::::onProgressChanged:::::::::::::::::');
                     webViewProvider.updateProgress(controller, progress);
                   },
                   onLoadStop: (controller, url) async {
@@ -110,14 +95,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   onReceivedError: (controller, url, error) {
                     webViewProvider.pullToRefreshController.endRefreshing();
                   },
-                  onUpdateVisitedHistory: (controller, url, androidIsReload) async{
-                    debugPrint('::::::::::::::onUpdateVisitedHistory:::::::::::::::::${url.toString()}');
+                  onUpdateVisitedHistory:
+                      (controller, url, androidIsReload) async {
+                    debugPrint(
+                        '::::::::::::::onUpdateVisitedHistory:::::::::::::::::${url.toString()}');
                     webViewProvider.updateUrl(url.toString());
                     await webViewProvider.setLocalStorage();
                   },
-                  onLoadResource: (controller, resource){
+                  onLoadResource: (controller, resource) {
                     debugPrint('::::::::::::::onLoadResource:::::::::::::::::');
-                    debugPrint('::::::::::::::${resource.url}:::::::::::::::::');
+                    debugPrint(
+                        '::::::::::::::${resource.url}:::::::::::::::::');
                   },
                 ),
               )
@@ -136,4 +124,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
           ],
         ),
       );
+
+  void callNativeLogin() {
+    Navigator.pushNamed(context, AppRouter.signIn);
+  }
+
+  void callNativeLogout() async {
+    WebViewProvider webViewProvider = Provider.of(context, listen: false);
+    await clearLocalData();
+    await webViewProvider.clearLocalStorage();
+    await webViewProvider.refresh();
+  }
 }

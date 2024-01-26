@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:order_online_app/src/features/authentication/model/reset_password_model.dart';
+import 'package:order_online_app/src/features/webview/webview_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
@@ -17,9 +19,9 @@ class AuthenticationProvider extends ChangeNotifier {
   bool loading = false;
   bool googleLoading = false;
   bool facebookLoading = false;
-  // final GlobalKey<FormState> signupFormKey = GlobalKey();
-  // final GlobalKey<FormState> signInFormKey = GlobalKey();
-  // final GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
+  final GlobalKey<FormState> signupFormKey = GlobalKey();
+  final GlobalKey<FormState> signInFormKey = GlobalKey();
+  final GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -58,9 +60,9 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<void> signupButtonOnTap() async {
     ApiService.instance.clearAccessToken();
-    // if (!signupFormKey.currentState!.validate()) {
-    //   return;
-    // }
+    if (!signupFormKey.currentState!.validate()) {
+      return;
+    }
     if (!validateEmail(emailController.text)) {
       showToast('Invalid email address');
       return;
@@ -109,17 +111,17 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<void> signInButtonOnTap() async {
     ApiService.instance.clearAccessToken();
-    // if (!signInFormKey.currentState!.validate()) {
-    //   return;
-    // }
+    if (!signInFormKey.currentState!.validate()) {
+      return;
+    }
     if (!validateEmail(emailController.text)) {
       showToast('Invalid email address');
       return;
     }
-    // if (!validatePassword(passwordController.text)) {
-    //   showToast('Password must be at least 8 characters');
-    //   return;
-    // }
+    if (!validatePassword(passwordController.text)) {
+      showToast('Password must be at least 8 characters');
+      return;
+    }
     loading = true;
     notifyListeners();
 
@@ -165,8 +167,7 @@ class AuthenticationProvider extends ChangeNotifier {
         idToken: googleAuth?.idToken,
       );
 
-      userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       if (userCredential != null) {
         debugPrint(userCredential!.user!.uid);
         debugPrint(userCredential!.user!.displayName);
@@ -184,14 +185,17 @@ class AuthenticationProvider extends ChangeNotifier {
             (LoginResponseModel? response) async {
           if (response != null) {
             await setData(LocalStorageKey.loginResponseKey,
-                    loginResponseModelToJson(response))
-                .then((value) async {
-              final BuildContext context =
-                  AppNavigatorKey.key.currentState!.context;
+                    loginResponseModelToJson(response)).then((value) async {
+              final BuildContext context = AppNavigatorKey.key.currentState!.context;
               ApiService.instance.addAccessToken(response.data?.accessToken);
               clearAllData();
-              Navigator.pushNamedAndRemoveUntil(
-                  context, AppRouter.tabBar, (route) => false);
+              final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+              // await webViewProvider.refresh();
+              await webViewProvider.getLocalData();
+              await webViewProvider.setLocalStorage();
+              await webViewProvider.refresh().then((value){
+                Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+              });
             }, onError: (error) {
               showToast(error.toString());
             });
@@ -212,9 +216,9 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<void> resetPasswordButtonOnTap() async {
     ApiService.instance.clearAccessToken();
-    // if (!resetPasswordFormKey.currentState!.validate()) {
-    //   return;
-    // }
+    if (!resetPasswordFormKey.currentState!.validate()) {
+      return;
+    }
     if (!validateEmail(emailController.text)) {
       showToast('Invalid email address');
       return;

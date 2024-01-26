@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
+import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/normal_card.dart';
@@ -21,13 +22,15 @@ class ForgotPasswordScreen extends StatelessWidget {
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Form(
-            // key: authProvider.resetPasswordFormKey,
+            key: authProvider.resetPasswordFormKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: size.height * .02),
-                Center(child: Image.asset('assets/images/splash_logo.png')),
+                const Text(AppString.appName,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColor.primaryColor, fontSize: 32,fontWeight: FontWeight.bold)),
                 const SizedBox(height: 24),
                 const Text('Forgot Password?',
                     style: TextStyle(

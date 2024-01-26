@@ -53,7 +53,6 @@ class WebViewProvider extends ChangeNotifier {
     url = newUrl;
     notifyListeners();
     debugPrint('\n\n Updated URL:::::::::::::::::::::::::::::: $newUrl \n\n');
-    // await setLocalStorage();
   }
 
   Future<void> refresh() async {
@@ -63,14 +62,12 @@ class WebViewProvider extends ChangeNotifier {
       webViewController?.loadUrl(
           urlRequest: URLRequest(url: await webViewController?.getUrl()));
     }
-    // await setLocalStorage();
     notifyListeners();
   }
 
 
   void configureWebViewController(String urlPath) async {
     url = '${WebEndpoint.baseUrl}$urlPath';
-
     webViewController?.loadUrl(
         urlRequest: URLRequest(url: WebUri.uri(Uri.parse(url))));
   }

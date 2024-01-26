@@ -22,7 +22,7 @@ class GeneratedRoute {
       case AppRouter.signIn:
         return PageRouteBuilder(
             settings: settings,
-            transitionsBuilder: fadeTransition,
+            transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const SignInScreen());
 
