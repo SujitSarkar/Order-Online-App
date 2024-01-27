@@ -81,21 +81,21 @@ class WebViewProvider extends ChangeNotifier {
         urlRequest: URLRequest(url: WebUri.uri(Uri.parse(url))));
   }
 
-  Future<void> setLocalStorage() async {
-    if(loginResponseModel?.data?.accessToken!=null){
-      await webViewController?.evaluateJavascript(
-          source: "localStorage.setItem('accessToken', '${loginResponseModel?.data?.accessToken}');");
-    }
-
-    String? value = await webViewController?.evaluateJavascript(
-        source: "localStorage.getItem('accessToken');");
-    debugPrint("\n\n\nRetrieved localStorage::::::::::::::::::: $value\n\n\n");
-  }
-
-  Future<void> clearLocalStorage() async {
-    await webViewController?.evaluateJavascript(
-        source: "localStorage.setItem('accessToken', '');");
-  }
+  // Future<void> setLocalStorage() async {
+  //   if(loginResponseModel?.data?.accessToken!=null){
+  //     await webViewController?.evaluateJavascript(
+  //         source: "localStorage.setItem('accessToken', '${loginResponseModel?.data?.accessToken}');");
+  //   }
+  //
+  //   String? value = await webViewController?.evaluateJavascript(
+  //       source: "localStorage.getItem('accessToken');");
+  //   debugPrint("\n\n\nRetrieved localStorage::::::::::::::::::: $value\n\n\n");
+  // }
+  //
+  // Future<void> clearLocalStorage() async {
+  //   await webViewController?.evaluateJavascript(
+  //       source: "localStorage.setItem('accessToken', '');");
+  // }
 
   void updateProgress(InAppWebViewController? controller, int? newProgress) {
     if (progress == 100) {

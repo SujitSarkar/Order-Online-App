@@ -29,7 +29,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
     final WebViewProvider webViewProvider = Provider.of(context, listen: false);
     webViewProvider.configureWebViewController(widget.urlPath);
     await webViewProvider.getLocalData();
-    await webViewProvider.setLocalStorage();
   }
 
   @override
@@ -58,19 +57,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     webViewProvider.webViewController?.addJavaScriptHandler(
                       handlerName: 'callNativeLogin',
                       callback: (args) async{
-                        await callNativeLogin().then((value) {
-                          debugPrint('Login Callback returned');
-                          showToast('Login Callback returned');
-                        });
+                        await callNativeLogin();
+                        webViewProvider.refresh();
+                        return webViewProvider.loginResponseModel?.data?.accessToken;
                       },
                     );
                     webViewProvider.webViewController?.addJavaScriptHandler(
                       handlerName: 'callNativeLogout',
                       callback: (args) async{
-                        await callNativeLogout().then((value){
-                          debugPrint('Logout Callback returned');
-                          showToast('Logout Callback returned');
-                        });
+                        await callNativeLogout();
                       },
                     );
                   },
@@ -97,7 +92,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     debugPrint(
                         '::::::::::::::onUpdateVisitedHistory:::::::::::::::::${url.toString()}');
                     webViewProvider.updateUrl(url.toString());
-                    await webViewProvider.setLocalStorage();
                   },
                   onLoadResource: (controller, resource) {
                     debugPrint('::::::::::::::onLoadResource:::::::::::::::::');
@@ -144,7 +138,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Future<void> callNativeLogout() async {
     WebViewProvider webViewProvider = Provider.of(context, listen: false);
     await clearLocalData();
-    await webViewProvider.clearLocalStorage();
     await webViewProvider.refresh();
     await FirebaseAuth.instance.signOut();
     // return;

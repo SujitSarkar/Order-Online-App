@@ -26,7 +26,8 @@ class AuthenticationProvider extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
   bool rememberMe = true;
@@ -91,22 +92,21 @@ class AuthenticationProvider extends ChangeNotifier {
     };
     debugPrint(requestBody.toString());
 
-    await _authRepository.signup(requestBody: requestBody).then((response) async{
+    await _authRepository
+        .signup(requestBody: requestBody)
+        .then((response) async {
       loading = false;
       notifyListeners();
       if (response != null) {
         await setData(LocalStorageKey.loginResponseKey,
-            loginResponseModelToJson(response)).then((value) async {
+            loginResponseModelToJson(response))
+            .then((value) async {
           final BuildContext context = AppNavigatorKey.key.currentState!.context;
           ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
-          final WebViewProvider webViewProvider = Provider.of(context,listen: false);
-          // await webViewProvider.refresh();
-          await webViewProvider.getLocalData();
-          await webViewProvider.setLocalStorage();
-          await webViewProvider.refresh().then((value){
-            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
-          });
+          final WebViewProvider webViewProvider = Provider.of(context, listen: false);
+          await webViewProvider.getLocalData().then((value) =>
+              Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage));
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -137,17 +137,17 @@ class AuthenticationProvider extends ChangeNotifier {
         (LoginResponseModel? response) async {
       if (response != null) {
         await setData(LocalStorageKey.loginResponseKey,
-            loginResponseModelToJson(response)).then((value) async {
-          final BuildContext context = AppNavigatorKey.key.currentState!.context;
+            loginResponseModelToJson(response))
+            .then((value) async {
+          final BuildContext context =
+              AppNavigatorKey.key.currentState!.context;
           ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
-          final WebViewProvider webViewProvider = Provider.of(context,listen: false);
-          // await webViewProvider.refresh();
-          await webViewProvider.getLocalData();
-          await webViewProvider.setLocalStorage();
-          await webViewProvider.refresh().then((value){
-            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
-          });
+          final WebViewProvider webViewProvider =
+          Provider.of(context, listen: false);
+          await webViewProvider.getLocalData().then((value) =>
+              Navigator.of(context).popUntil(
+                      (route) => route.settings.name == AppRouter.webViewPage));
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -172,7 +172,8 @@ class AuthenticationProvider extends ChangeNotifier {
         idToken: googleAuth?.idToken,
       );
 
-      userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
       if (userCredential != null) {
         debugPrint(userCredential!.user!.uid);
         debugPrint(userCredential!.user!.displayName);
@@ -194,13 +195,9 @@ class AuthenticationProvider extends ChangeNotifier {
               final BuildContext context = AppNavigatorKey.key.currentState!.context;
               ApiService.instance.addAccessToken(response.data?.accessToken);
               clearAllData();
-              final WebViewProvider webViewProvider = Provider.of(context,listen: false);
-              // await webViewProvider.refresh();
-              await webViewProvider.getLocalData();
-              await webViewProvider.setLocalStorage();
-              await webViewProvider.refresh().then((value){
-                Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
-              });
+              final WebViewProvider webViewProvider = Provider.of(context, listen: false);
+              await webViewProvider.getLocalData().then((value) =>
+                  Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage));
             }, onError: (error) {
               showToast(error.toString());
             });
@@ -234,12 +231,12 @@ class AuthenticationProvider extends ChangeNotifier {
     Map<String, dynamic> requestBody = {"email": emailController.text.trim()};
 
     await _authRepository.resetPassword(requestBody: requestBody).then(
-            (ResetPasswordResponseModel? response) async {
-          if (response != null && response.status==true) {
-            showToast(response.message??'');
-            Navigator.pop(AppNavigatorKey.key.currentState!.context);
-          }
-        }, onError: (error) {
+        (ResetPasswordResponseModel? response) async {
+      if (response != null && response.status == true) {
+        showToast(response.message ?? '');
+        Navigator.pop(AppNavigatorKey.key.currentState!.context);
+      }
+    }, onError: (error) {
       showToast(error.toString());
     });
     loading = false;
