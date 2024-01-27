@@ -36,15 +36,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     final WebViewProvider webViewProvider = Provider.of(context);
     return PopScope(
       canPop: false,
-      onPopInvoked: (value) async {
-        bool canBack = await webViewProvider.webViewController!.canGoBack();
-        if (canBack) {
-          webViewProvider.webViewController!.goBack();
-        } else {
-          //ignore: use_build_context_synchronously
-          Navigator.pushNamedAndRemoveUntil(context, AppRouter.home, (route) => false);
-        }
-      },
+      onPopInvoked: (value) async => await webViewProvider.goBack(context),
       child: Scaffold(
           backgroundColor: AppColor.cardColor, body: _bodyUI(webViewProvider)),
     );
@@ -127,9 +119,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 top: 65,
                 left: 10,
                 child: InkWell(
-                  onTap: (){
-                    Navigator.popUntil(context, (route) => route.settings.name==AppRouter.home);
-                  },
+                  onTap: ()async=> await webViewProvider.goBack(context),
                   child: const CircleAvatar(
                     backgroundColor: AppColor.primaryColor,
                     child: Icon(Icons.arrow_back_ios_new,color: Colors.white),

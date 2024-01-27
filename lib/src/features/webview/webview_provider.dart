@@ -5,6 +5,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/local_storage_key.dart';
 import '../../../core/constants/web_endpoint.dart';
+import '../../../core/router/app_router.dart';
 import '../../../core/utils/local_storage.dart';
 import '../authentication/model/login_response_model.dart';
 
@@ -22,6 +23,16 @@ class WebViewProvider extends ChangeNotifier {
   String url = WebEndpoint.baseUrl;
   double progress = 0;
   bool reloading = false;
+
+  Future<void> goBack(BuildContext context) async {
+    bool canBack = await webViewController!.canGoBack();
+    if (canBack) {
+      webViewController!.goBack();
+    } else {
+      //ignore: use_build_context_synchronously
+      Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home);
+    }
+  }
 
   Future<void> checkConnectivity() async {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
@@ -63,7 +74,6 @@ class WebViewProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
 
   void configureWebViewController(String urlPath) async {
     url = '${WebEndpoint.baseUrl}$urlPath';
