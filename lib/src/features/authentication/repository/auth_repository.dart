@@ -1,9 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
-import 'package:order_online_app/src/features/webview/webview_provider.dart';
-import 'package:provider/provider.dart';
-import '../../../../core/utils/app_navigator_key.dart';
-import '../../../../core/utils/local_storage.dart';
+import 'package:order_online_app/core/utils/app_toast.dart';
 import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../model/login_response_model.dart';
@@ -22,6 +18,7 @@ class AuthRepository {
       result = loginResponseModelFromJson(response.body);
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
+      showToast(error.message ?? 'Something went wrong');
     });
     return result;
   }
@@ -37,6 +34,7 @@ class AuthRepository {
       result = loginResponseModelFromJson(response.body);
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
+      showToast(error.message ?? 'Something went wrong');
     });
     return result;
   }
@@ -51,6 +49,7 @@ class AuthRepository {
       result = loginResponseModelFromJson(response.body);
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
+      showToast(error.message ?? 'Something went wrong');
     });
     return result;
   }
@@ -67,26 +66,8 @@ class AuthRepository {
       result = resetPasswordResponseModelFromJson(response.body);
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
+      showToast(error.message ?? 'Something went wrong');
     });
     return result;
-  }
-
-  Future<void> logout()async{
-    final WebViewProvider webViewProvider = Provider.of(AppNavigatorKey.key.currentState!.context);
-    ApiService.instance.clearAccessToken();
-    await clearLocalData();
-    await FirebaseAuth.instance.signOut();
-    await webViewProvider.clearLocalStorage();
-    // await ApiService.instance.apiCall(execute: () async {
-    //   return await ApiService.instance.post(
-    //       '${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
-    // }, onSuccess: (response) async {
-    //   ApiService.instance.clearAccessToken();
-    //   await clearLocalData();
-    //   await FirebaseAuth.instance.signOut().then((value) => Navigator.pushNamedAndRemoveUntil(
-    //       AppNavigatorKey.key.currentState!.context, AppRouter.signIn, (route) => false));
-    // }, onError: (error) {
-    //   debugPrint(error.message ?? 'Something went wrong');
-    // });
   }
 }

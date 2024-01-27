@@ -31,23 +31,6 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushNamedAndRemoveUntil(
           context, AppRouter.home, (route) => false);
     });
-
-    // LoginResponseModel? loginResponseModel;
-    // final loginResponseFromLocal = await getData(LocalStorageKey.loginResponseKey);
-    // if (loginResponseFromLocal != null) {
-    //   loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
-    // }
-    //
-    // await Future.delayed(const Duration(milliseconds: 1200)).then((value) {
-    //   if (loginResponseModel != null &&
-    //       loginResponseModel.data?.accessToken != null) {
-    //     Navigator.pushNamedAndRemoveUntil(
-    //         context, AppRouter.tabBar, (route) => false);
-    //   } else {
-    //     Navigator.pushNamedAndRemoveUntil(
-    //         context, AppRouter.signIn, (route) => false);
-    //   }
-    // });
   }
 
   @override
@@ -55,11 +38,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return const Scaffold(
         backgroundColor: AppColor.primaryColor,
         body: Center(
-            child: Hero(
-          tag: 'splashToSignIn',
-          child: Text(AppString.appName,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 40,fontWeight: FontWeight.bold)),
-        )));
+            child: Text(AppString.appName,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 40,fontWeight: FontWeight.bold))));
   }
 }

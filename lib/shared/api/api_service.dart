@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'app_exceptions.dart';
-import 'error_handler.dart';
 
 class ApiService {
   ApiService._privateConstructor();
@@ -22,8 +20,8 @@ class ApiService {
     'X-App': Platform.isAndroid
         ? 'Android'
         : Platform.isIOS
-        ? 'IOS'
-        : 'web'
+            ? 'IOS'
+            : 'web'
   };
 
   void addAccessToken(String? token) {
@@ -42,12 +40,10 @@ class ApiService {
     try {
       if (onLoading != null) onLoading();
       // hide keyboard
-      // SystemChannels.textInput.invokeMethod('TextInput.hide');
-      //execute function that user passed
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       var response = await execute();
       return onSuccess(response);
     } catch (error) {
-      ErrorHandler.handleError(error);
       if (onError == null) return;
       onError(error);
       return;
@@ -88,31 +84,12 @@ class ApiService {
     debugPrint('AccessToken:- ${headers['Authorization']}');
     debugPrint('response:- ${response.body}');
 
-    switch (response.statusCode) {
-      case 200:
-      case 201:
-      case 204:
-        return response;
-      case 400:
-        throw BadRequestException('Invalid credentials');
-      case 404:
-        throw InvalidCredentialsException('Invalid credentials');
-      case 401:
-        throw UnauthorizedException('Unauthorized request');
-      //implement logout
-      case 403:
-        throw UnauthorizedException('Unauthorized request');
-      case 417:
-        throw ExpectationException(
-            'There is no public email found for this user');
-      case 422:
-        throw ExpectationException('Duplicate Credentials');
-      case 409:
-        throw UnauthorizedException('Duplicate credential');
-      case 500:
-        throw DataParsingException('Internal server error');
-      default:
-        throw DataParsingException('Something went wrong');
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
+      return response;
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
     }
   }
 }

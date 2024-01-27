@@ -74,7 +74,7 @@ class DrawerWidget extends StatelessWidget {
                 width: 200,
                 borderRadius: const BorderRadius.all(Radius.circular(50)),
                 child: const Text(
-                  'Book A Table',
+                  'Reservation',
                   style: TextStyle(fontSize: 24, color: AppColor.primaryColor),
                 )),
           ],

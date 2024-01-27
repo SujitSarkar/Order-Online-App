@@ -51,7 +51,7 @@ class GeneratedRoute {
       case AppRouter.home:
         return PageRouteBuilder(
             settings: settings,
-            transitionsBuilder: slideTransition,
+            transitionsBuilder: fadeTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const HomeScreen());
 
@@ -66,10 +66,9 @@ class GeneratedRoute {
         final String urlPath = settings.arguments as String;
         return PageRouteBuilder(
             settings: settings,
-            transitionsBuilder: slideTransition,
+            transitionsBuilder: fadeTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
             WebViewScreen(urlPath: urlPath));
-
 
       default:
         return PageRouteBuilder(

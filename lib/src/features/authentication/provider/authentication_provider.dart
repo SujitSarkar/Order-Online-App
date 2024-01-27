@@ -95,13 +95,18 @@ class AuthenticationProvider extends ChangeNotifier {
       loading = false;
       notifyListeners();
       if (response != null) {
-        await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response))
-            .then((value) async {
+        await setData(LocalStorageKey.loginResponseKey,
+            loginResponseModelToJson(response)).then((value) async {
           final BuildContext context = AppNavigatorKey.key.currentState!.context;
           ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRouter.home, (route) => false);
+          final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+          // await webViewProvider.refresh();
+          await webViewProvider.getLocalData();
+          await webViewProvider.setLocalStorage();
+          await webViewProvider.refresh().then((value){
+            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+          });
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -118,10 +123,6 @@ class AuthenticationProvider extends ChangeNotifier {
       showToast('Invalid email address');
       return;
     }
-    if (!validatePassword(passwordController.text)) {
-      showToast('Password must be at least 8 characters');
-      return;
-    }
     loading = true;
     notifyListeners();
 
@@ -135,14 +136,18 @@ class AuthenticationProvider extends ChangeNotifier {
     await _authRepository.signIn(requestBody: requestBody).then(
         (LoginResponseModel? response) async {
       if (response != null) {
-        await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response))
-            .then((value) async {
+        await setData(LocalStorageKey.loginResponseKey,
+            loginResponseModelToJson(response)).then((value) async {
           final BuildContext context = AppNavigatorKey.key.currentState!.context;
           ApiService.instance.addAccessToken(response.data?.accessToken);
-          debugPrint('AssesToken: ${response.data?.accessToken}');
           clearAllData();
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRouter.home, (route) => false);
+          final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+          // await webViewProvider.refresh();
+          await webViewProvider.getLocalData();
+          await webViewProvider.setLocalStorage();
+          await webViewProvider.refresh().then((value){
+            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+          });
         }, onError: (error) {
           showToast(error.toString());
         });

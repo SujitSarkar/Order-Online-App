@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:order_online_app/core/router/app_router.dart';
@@ -145,5 +146,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
     await clearLocalData();
     await webViewProvider.clearLocalStorage();
     await webViewProvider.refresh();
+    await FirebaseAuth.instance.signOut();
   }
 }
