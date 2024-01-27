@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:order_online_app/core/router/app_router.dart';
-import 'package:order_online_app/core/utils/app_toast.dart';
 import 'package:order_online_app/core/utils/local_storage.dart';
 import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
@@ -138,6 +137,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Future<void> callNativeLogout() async {
     WebViewProvider webViewProvider = Provider.of(context, listen: false);
     await clearLocalData();
+    await webViewProvider.getLocalData();
     await webViewProvider.refresh();
     await FirebaseAuth.instance.signOut();
     // return;
