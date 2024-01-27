@@ -29,6 +29,11 @@ class HomeProvider extends ChangeNotifier {
     Navigator.pushNamed(context, AppRouter.webViewPage, arguments: urlPath);
   }
 
+  void popAndNavigateToWebPage(String urlPath, BuildContext context) {
+    Scaffold.of(context).closeEndDrawer();
+    Navigator.pushNamed(context, AppRouter.webViewPage, arguments: urlPath);
+  }
+
   bool canPop() => AppNavigatorKey.key.currentState!.canPop();
 
   Future<void> getSettingsData() async {

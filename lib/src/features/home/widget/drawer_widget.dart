@@ -24,42 +24,46 @@ class DrawerWidget extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                onPressed: ()=>Scaffold.of(context).closeEndDrawer(),
+                onPressed: () => Scaffold.of(context).closeEndDrawer(),
                 icon: const Icon(Icons.cancel_outlined,
                     color: Colors.white, size: 30),
               ),
             ),
             const SizedBox(height: 100),
             InkWell(
-                onTap: ()=>homeProvider.navigateToWebPage(''),
+                onTap: () => homeProvider.popAndNavigateToWebPage('',context),
                 child: const Text(
                   'Home',
                   style: TextStyle(color: Colors.white, fontSize: 24),
                 )),
             const SizedBox(height: 20),
             InkWell(
-                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.awards),
+                onTap: () =>
+                    homeProvider.popAndNavigateToWebPage(WebEndpoint.awards,context),
                 child: const Text(
                   'Awards',
                   style: TextStyle(color: Colors.white, fontSize: 24),
                 )),
             const SizedBox(height: 20),
             InkWell(
-                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.gallery),
+                onTap: () =>
+                    homeProvider.popAndNavigateToWebPage(WebEndpoint.gallery,context),
                 child: const Text(
                   'Gallery',
                   style: TextStyle(color: Colors.white, fontSize: 24),
                 )),
             const SizedBox(height: 20),
             InkWell(
-                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.contact),
+                onTap: () =>
+                    homeProvider.popAndNavigateToWebPage(WebEndpoint.contact,context),
                 child: const Text(
                   'Contact',
                   style: TextStyle(color: Colors.white, fontSize: 24),
                 )),
             const SizedBox(height: 20),
             SolidButton(
-                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
+                onTap: () =>
+                    homeProvider.popAndNavigateToWebPage(WebEndpoint.orderUrl,context),
                 backgroundColor: Colors.white,
                 width: 200,
                 borderRadius: const BorderRadius.all(Radius.circular(50)),
@@ -69,7 +73,8 @@ class DrawerWidget extends StatelessWidget {
                 )),
             const SizedBox(height: 20),
             SolidButton(
-                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.reservationUrl),
+                onTap: () => homeProvider
+                    .popAndNavigateToWebPage(WebEndpoint.reservationUrl,context),
                 backgroundColor: Colors.white,
                 width: 200,
                 borderRadius: const BorderRadius.all(Radius.circular(50)),
