@@ -10,7 +10,6 @@ import '../../../core/widgets/no_internet_screen.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key, required this.urlPath});
-
   final String urlPath;
 
   @override
@@ -117,7 +116,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   color: AppColor.cardColor,
                   alignment: Alignment.center,
                   child: const LoadingWidget()),
+
+            ///No Internet Widget
             if (!webViewProvider.connected) const NoInternetScreen(),
+
+            ///Back Button
             if(webViewProvider.connected)
               Positioned(
                 top: 65,
@@ -135,9 +138,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       );
 
-  void callNativeLogin() {
-    Navigator.pushNamed(context, AppRouter.signIn);
-  }
+  void callNativeLogin()=> Navigator.pushNamed(context, AppRouter.signIn);
 
   void callNativeLogout() async {
     WebViewProvider webViewProvider = Provider.of(context, listen: false);

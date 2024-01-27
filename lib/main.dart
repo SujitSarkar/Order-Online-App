@@ -18,10 +18,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  ///Customize StatusBar
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: AppColor.primaryColor,
-    statusBarIconBrightness: Brightness.light
-  ));
+    statusBarIconBrightness: Brightness.light));
   runApp(const MyApp());
 }
 

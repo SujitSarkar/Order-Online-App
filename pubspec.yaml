@@ -1,7 +1,6 @@
 name: order_online_app
-description: "A new Flutter project."
+description: "Order Online App"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
 version: 1.0.0+1
 
 environment:
@@ -29,16 +28,12 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
 
-
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
-
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-
-  # list giving the asset and other descriptors for the font. For
   fonts:
     - family: inter
       fonts:

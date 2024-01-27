@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/local_storage.dart';
 import '../../../../shared/api/api_endpoint.dart';

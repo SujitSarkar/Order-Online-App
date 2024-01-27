@@ -51,7 +51,7 @@ class GeneratedRoute {
       case AppRouter.home:
         return PageRouteBuilder(
             settings: settings,
-            transitionsBuilder: fadeTransition,
+            transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const HomeScreen());
 
@@ -66,7 +66,7 @@ class GeneratedRoute {
         final String urlPath = settings.arguments as String;
         return PageRouteBuilder(
             settings: settings,
-            transitionsBuilder: fadeTransition,
+            transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
             WebViewScreen(urlPath: urlPath));
 
@@ -79,7 +79,6 @@ class GeneratedRoute {
                 const SplashScreen());
     }
   }
-  static const transitionDuration = Duration(milliseconds: 500);
 
   static Widget fadeTransition(
       BuildContext context,

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constants/app_color.dart';
-
 class OutlineButton extends StatelessWidget {
   const OutlineButton(
       {Key? key,

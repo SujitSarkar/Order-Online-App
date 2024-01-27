@@ -1,6 +1,4 @@
 import '../../core/utils/app_toast.dart';
-import '../../src/features/authentication/repository/auth_repository.dart';
-import 'api_service.dart';
 import 'app_exceptions.dart';
 
 class ErrorHandler {
@@ -11,7 +9,6 @@ class ErrorHandler {
       showToast(exception.message!);
     } else if (exception is UnauthorizedException) {
       //If access token has un authorised then logout
-
       // if (ApiService.instance.headers['Authorization'] != null &&
       //     ApiService.instance.headers['Authorization']!.isNotEmpty) {
       //   await AuthRepository().logout();

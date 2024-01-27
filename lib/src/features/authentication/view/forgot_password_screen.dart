@@ -4,7 +4,6 @@ import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/widgets/loading_widget.dart';
-import '../../../../core/widgets/normal_card.dart';
 import '../../../../core/widgets/solid_button.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../provider/authentication_provider.dart';

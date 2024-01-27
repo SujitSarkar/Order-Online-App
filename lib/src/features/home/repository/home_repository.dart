@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:order_online_app/core/constants/web_endpoint.dart';
 import 'package:order_online_app/shared/api/api_endpoint.dart';
 import 'package:order_online_app/shared/api/api_service.dart';
 import 'package:order_online_app/src/features/home/model/settings_data_model.dart';

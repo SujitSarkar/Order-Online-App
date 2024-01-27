@@ -21,7 +21,6 @@ class WebViewProvider extends ChangeNotifier {
   );
   String url = WebEndpoint.baseUrl;
   double progress = 0;
-  String pageTitle = 'Loading...';
   bool reloading = false;
 
   Future<void> checkConnectivity() async {
