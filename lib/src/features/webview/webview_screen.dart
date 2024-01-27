@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:order_online_app/core/router/app_router.dart';
+import 'package:order_online_app/core/utils/app_toast.dart';
 import 'package:order_online_app/core/utils/local_storage.dart';
 import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
@@ -56,14 +57,20 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     webViewProvider.webViewController = controller;
                     webViewProvider.webViewController?.addJavaScriptHandler(
                       handlerName: 'callNativeLogin',
-                      callback: (args) {
-                        callNativeLogin();
+                      callback: (args) async{
+                        await callNativeLogin().then((value) {
+                          debugPrint('Login Callback returned');
+                          showToast('Login Callback returned');
+                        });
                       },
                     );
                     webViewProvider.webViewController?.addJavaScriptHandler(
                       handlerName: 'callNativeLogout',
-                      callback: (args) {
-                        callNativeLogout();
+                      callback: (args) async{
+                        await callNativeLogout().then((value){
+                          debugPrint('Logout Callback returned');
+                          showToast('Logout Callback returned');
+                        });
                       },
                     );
                   },
@@ -129,13 +136,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       );
 
-  void callNativeLogin()=> Navigator.pushNamed(context, AppRouter.signIn);
+  Future<void> callNativeLogin()async{
+    await Navigator.pushNamed(context, AppRouter.signIn);
+    // return;
+  }
 
-  void callNativeLogout() async {
+  Future<void> callNativeLogout() async {
     WebViewProvider webViewProvider = Provider.of(context, listen: false);
     await clearLocalData();
     await webViewProvider.clearLocalStorage();
     await webViewProvider.refresh();
     await FirebaseAuth.instance.signOut();
+    // return;
   }
 }
