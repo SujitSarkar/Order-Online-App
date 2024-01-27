@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:order_online_app/src/features/home/screen/home_screen.dart';
 import 'package:order_online_app/src/features/privacy/privacy_and_terms_screen.dart';
 import '../../src/features/authentication/view/forgot_password_screen.dart';
 import '../../src/features/authentication/view/signup_screen.dart';
 import '../../src/features/authentication/view/signin_screen.dart';
 import '../../src/features/splash/splash_screen.dart';
-import '../../src/features/tab_bar/screen/tabbar_screen.dart';
 import '../../src/features/webview/webview_screen.dart';
 import '../widgets/no_internet_screen.dart';
 import 'app_router.dart';
@@ -48,12 +48,12 @@ class GeneratedRoute {
             pageBuilder: (_, animation, secondaryAnimation) =>
             PrivacyAndTermsScreen(url: url));
 
-      case AppRouter.tabBar:
+      case AppRouter.home:
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: fadeTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-                const TabBarScreen());
+                const HomeScreen());
 
       case AppRouter.noInternet:
         return PageRouteBuilder(

@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/Material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:order_online_app/core/constants/app_color.dart';
 import 'package:order_online_app/core/constants/app_string.dart';
 import 'package:order_online_app/core/constants/text_size.dart';
@@ -8,9 +10,11 @@ import 'package:order_online_app/core/widgets/loading_widget.dart';
 import 'package:order_online_app/core/widgets/outline_button.dart';
 import 'package:order_online_app/core/widgets/solid_button.dart';
 import 'package:order_online_app/src/features/home/provider/home_provider.dart';
+import 'package:order_online_app/src/features/home/widget/drawer_widget.dart';
+import 'package:order_online_app/src/features/home/widget/video_widget.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/web_endpoint.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/utils/validator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,12 +37,50 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: AppColor.cardColor,
-      body: SafeArea(
-          child: homeProvider.loading
-              ? const Center(child: LoadingWidget())
-              : ListView(
+
+    return PopScope(
+      canPop: false, // Allow popping by default
+      onPopInvoked: (value)async{
+        if(homeProvider.canPop()){
+          Navigator.pop(context);
+        }else{
+          // ignore: use_build_context_synchronously
+          final shouldExit = await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Do you want to exit?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child:
+                  const Text('No', style: TextStyle(color: Colors.green)),
+                ),
+                TextButton(
+                  onPressed: () => SystemNavigator.pop(),
+                  child: const Text('Yes', style: TextStyle(color: Colors.red)),
+                ),
+              ],
+            ),
+          );
+          return shouldExit ?? false;
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColor.cardColor,
+        appBar: AppBar(
+          title: const Text(AppString.appName,style: TextStyle(color: Colors.white,fontSize: 24)),
+            iconTheme: const IconThemeData(color: Colors.white)),
+        endDrawer: Drawer(
+          backgroundColor: Colors.black54,
+          width: size.width,
+          child: const DrawerWidget(),
+        ),
+        body: homeProvider.loading
+            ? const Center(child: LoadingWidget())
+            : RefreshIndicator(
+          backgroundColor: Colors.white,
+              onRefresh: ()async=> await homeProvider.onRefresh(),
+              child: ListView(
                 children: [
                   CarouselSlider(
                       options: CarouselOptions(
@@ -47,18 +89,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         scrollDirection: Axis.horizontal,
                         viewportFraction: 1,
                       ),
-                      items: homeProvider.sliderImageUrlList.map((imageUrl) {
+                      items: homeProvider.sliderImageUrlList.map((mediaUrl) {
                         return Builder(
                           builder: (BuildContext context) {
                             return Container(
                               width: double.infinity,
                               height: size.height*.4,
-                              decoration: const BoxDecoration(color: AppColor.cardColor),
+                              decoration: BoxDecoration(color: Colors.grey.shade300),
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  CachedNetworkImage(
-                                      imageUrl: imageUrl,
+                                  isVideoUrl(mediaUrl)
+                                      ? VideoWidget(videoUrl: mediaUrl)
+                                      : CachedNetworkImage(
+                                      imageUrl: mediaUrl,
                                       placeholder: (context, url) => Container(
                                             width: double.infinity,
                                             height: size.height*.4,
@@ -100,15 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Expanded(
                                               child: SolidButton(
-                                                  onTap: () {
-                                                    Navigator
-                                                        .pushNamedAndRemoveUntil(
-                                                            context,
-                                                            AppRouter.webViewPage,
-                                                            arguments: WebEndpoint
-                                                                .orderUrl,
-                                                            (route) => false);
-                                                  },
+                                                  onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
                                                   child: const Text('Order Online',
                                                       style: TextStyle(
                                                           color: Colors.white,
@@ -120,14 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             const SizedBox(width: 12),
                                             Expanded(
                                               child: OutlineButton(
-                                                onTap: () {
-                                                  Navigator.pushNamedAndRemoveUntil(
-                                                      context,
-                                                      AppRouter.webViewPage,
-                                                      arguments: WebEndpoint
-                                                          .reservationUrl,
-                                                      (route) => false);
-                                                },
+                                                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.reservationUrl),
                                                 child: const Text('Book A Table',
                                                     style: TextStyle(
                                                         color: Colors.white,
@@ -160,10 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ClipRRect(
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                           child: InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, AppRouter.webViewPage,
-                                  arguments: WebEndpoint.awards);
-                            },
+                            onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.awards),
                             child: Stack(
                               children: [
                                 Image.asset(
@@ -197,10 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ClipRRect(
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                           child: InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, AppRouter.webViewPage,
-                                  arguments: WebEndpoint.gallery);
-                            },
+                            onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.gallery),
                             child: Stack(
                               children: [
                                 Image.asset(
@@ -234,10 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ClipRRect(
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                           child: InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, AppRouter.webViewPage,
-                                  arguments: WebEndpoint.orderUrl);
-                            },
+                            onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
                             child: Stack(
                               children: [
                                 Image.asset(
@@ -270,7 +290,54 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ],
-              )),
+              ),
+            ),
+        bottomNavigationBar: Container(
+          color: AppColor.secondaryColor,
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              InkWell(
+                onTap: ()=>homeProvider.navigateToWebPage(''),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.view_list,color: Colors.white),
+                    Text('Menu',style: TextStyle(color: Colors.white))
+                  ],
+                ),
+              ),
+
+              InkWell(
+                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(CupertinoIcons.shopping_cart,color: Colors.grey.shade400),
+                    Text('Order',style: TextStyle(color: Colors.grey.shade400))
+                  ],
+                ),
+              ),
+
+              InkWell(
+                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.profileUrl),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(CupertinoIcons.person_fill,color: Colors.grey.shade400),
+                    Text('Profile',style: TextStyle(color: Colors.grey.shade400))
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
+
 }

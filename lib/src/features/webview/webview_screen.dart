@@ -35,14 +35,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Widget build(BuildContext context) {
     final WebViewProvider webViewProvider = Provider.of(context);
     return PopScope(
-      canPop: false, // Allow popping by default
+      canPop: false,
       onPopInvoked: (value) async {
         bool canBack = await webViewProvider.webViewController!.canGoBack();
         if (canBack) {
           webViewProvider.webViewController!.goBack();
         } else {
           //ignore: use_build_context_synchronously
-          Navigator.popAndPushNamed(context, AppRouter.tabBar);
+          Navigator.pushNamedAndRemoveUntil(context, AppRouter.home, (route) => false);
         }
       },
       child: Scaffold(
@@ -54,14 +54,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Column(
-                children: <Widget>[
+            Column(children: [
               Expanded(
                 child: InAppWebView(
                   initialUrlRequest: URLRequest(
                       url: WebUri.uri(Uri.parse(webViewProvider.url))),
-                  pullToRefreshController:
-                      webViewProvider.pullToRefreshController,
+                  pullToRefreshController: webViewProvider.pullToRefreshController,
                   onWebViewCreated: (controller) {
                     webViewProvider.webViewController = controller;
                     webViewProvider.webViewController?.addJavaScriptHandler(
@@ -111,8 +109,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
               )
               // ignore: unnecessary_null_comparison
             ].where((Object o) => o != null).toList()),
-            if (webViewProvider.progress != 1.0 &&
-                webViewProvider.reloading == false)
+            if (webViewProvider.progress != 1.0 && webViewProvider.reloading == false)
               Container(
                   height: double.infinity,
                   width: double.infinity,
@@ -120,7 +117,20 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   color: AppColor.cardColor,
                   alignment: Alignment.center,
                   child: const LoadingWidget()),
-            if (!webViewProvider.connected) const NoInternetScreen()
+            if (!webViewProvider.connected) const NoInternetScreen(),
+            if(webViewProvider.connected)
+              Positioned(
+                top: 65,
+                left: 10,
+                child: InkWell(
+                  onTap: (){
+                    Navigator.popUntil(context, (route) => route.settings.name==AppRouter.home);
+                  },
+                  child: const CircleAvatar(
+                    backgroundColor: AppColor.primaryColor,
+                    child: Icon(Icons.arrow_back_ios_new,color: Colors.white),
+                  ),
+              ))
           ],
         ),
       );

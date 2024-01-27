@@ -2,7 +2,7 @@
 
 class AppRouter {
   static const String initializer = '/';
-  static const String tabBar = '/tab-bar';
+  static const String home = '/home';
   static const String signIn = '/signIn';
   static const String signup = '/signup';
   static const String privacyTerms = '/privacy_terms';

@@ -5,6 +5,7 @@ class WebEndpoint {
   static const String profileUrl = '/profile';
   static const String awards = '/awards';
   static const String gallery = '/gallery';
+  static const String contact = '/contact';
   static const String privacyPolicyUrl = '/privacy-policy';
   static const String termsAndConditionUrl = '/terms-and-conditions';
 }

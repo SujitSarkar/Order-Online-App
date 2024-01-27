@@ -3,6 +3,8 @@ import 'package:order_online_app/core/utils/app_toast.dart';
 import 'package:order_online_app/shared/api/api_endpoint.dart';
 import 'package:order_online_app/src/features/home/model/settings_data_model.dart';
 import 'package:order_online_app/src/features/home/repository/home_repository.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/utils/app_navigator_key.dart';
 
 class HomeProvider extends ChangeNotifier {
   final HomeRepository _homeRepository = HomeRepository();
@@ -11,13 +13,25 @@ class HomeProvider extends ChangeNotifier {
   List<String> sliderImageUrlList = [];
 
   Future<void> initialize() async {
+    loading = true;
+    notifyListeners();
+    await getSettingsData();
+    loading = false;
+    notifyListeners();
+  }
+
+  Future<void> onRefresh()async{
     await getSettingsData();
   }
 
-  Future<void> getSettingsData() async {
-    loading = true;
-    notifyListeners();
+  void navigateToWebPage(String urlPath) {
+    final BuildContext context = AppNavigatorKey.key.currentState!.context;
+    Navigator.pushNamed(context, AppRouter.webViewPage, arguments: urlPath);
+  }
 
+  bool canPop() => AppNavigatorKey.key.currentState!.canPop();
+
+  Future<void> getSettingsData() async {
     await _homeRepository.getAppSettings().then((SettingsDataModel? response) async {
       if (response != null) {
         sliderImageUrlList = [];
@@ -50,12 +64,12 @@ class HomeProvider extends ChangeNotifier {
           sliderImageUrlList.add(
               '${ApiEndpoint.imageUrlPath}/${settingsDataModel!.data!.sliderImgMobile5}');
         }
+
+        // sliderImageUrlList.add('https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4');
         notifyListeners();
       }
     }, onError: (error) {
       showToast(error.toString());
     });
-    loading = false;
-    notifyListeners();
   }
 }

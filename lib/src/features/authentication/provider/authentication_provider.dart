@@ -101,7 +101,7 @@ class AuthenticationProvider extends ChangeNotifier {
           ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
           Navigator.pushNamedAndRemoveUntil(
-              context, AppRouter.tabBar, (route) => false);
+              context, AppRouter.home, (route) => false);
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -142,7 +142,7 @@ class AuthenticationProvider extends ChangeNotifier {
           debugPrint('AssesToken: ${response.data?.accessToken}');
           clearAllData();
           Navigator.pushNamedAndRemoveUntil(
-              context, AppRouter.tabBar, (route) => false);
+              context, AppRouter.home, (route) => false);
         }, onError: (error) {
           showToast(error.toString());
         });

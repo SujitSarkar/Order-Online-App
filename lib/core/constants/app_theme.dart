@@ -77,6 +77,7 @@ class AppTheme {
 
   static var hideStatusBar =
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+
   static var showStatusBar = SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
       overlays: SystemUiOverlay.values);
