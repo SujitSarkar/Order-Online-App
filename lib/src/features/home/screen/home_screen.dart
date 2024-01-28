@@ -14,7 +14,6 @@ import 'package:order_online_app/src/features/home/widget/drawer_widget.dart';
 import 'package:order_online_app/src/features/home/widget/video_widget.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/web_endpoint.dart';
-import '../../../../core/utils/validator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -82,26 +81,27 @@ class _HomeScreenState extends State<HomeScreen> {
               onRefresh: ()async=> await homeProvider.onRefresh(),
               child: ListView(
                 children: [
-                  CarouselSlider(
-                      options: CarouselOptions(
-                        height: size.height*.4,
-                        autoPlay: true,
-                        scrollDirection: Axis.horizontal,
-                        viewportFraction: 1,
-                      ),
-                      items: homeProvider.sliderImageUrlList.map((mediaUrl) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return Container(
-                              width: double.infinity,
-                              height: size.height*.4,
-                              decoration: BoxDecoration(color: Colors.grey.shade300),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  isVideoUrl(mediaUrl)
-                                      ? VideoWidget(videoUrl: mediaUrl)
-                                      : CachedNetworkImage(
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      homeProvider.settingsDataModel?.data!.sliderVidEnable!=null
+                          && homeProvider.settingsDataModel?.data!.sliderVidEnable==true
+                          ? VideoWidget(videoUrl: homeProvider.settingsDataModel?.data!.sliderVid??'')
+                      :CarouselSlider(
+                          options: CarouselOptions(
+                            height: size.height*.4,
+                            autoPlay: true,
+                            scrollDirection: Axis.horizontal,
+                            viewportFraction: 1,
+                          ),
+                          items: homeProvider.sliderImageUrlList.map((mediaUrl) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Container(
+                                  width: double.infinity,
+                                  height: size.height*.4,
+                                  decoration: BoxDecoration(color: Colors.grey.shade300),
+                                  child: CachedNetworkImage(
                                       imageUrl: mediaUrl,
                                       placeholder: (context, url) => Container(
                                             width: double.infinity,
@@ -115,70 +115,75 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: double.infinity,
                                       height: size.height*.4,
                                       fit: BoxFit.cover),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      const Text('Welcome to',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white)),
-                                      const Text(AppString.appName,
-                                          style: TextStyle(
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white)),
-                                      const Text('Best Quality And Tasty Food',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white)),
-                                      const SizedBox(height: 12),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Expanded(
-                                              child: SolidButton(
-                                                  onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
-                                                  child: const Text('Order Online',
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize:
-                                                              TextSize.buttonText,
-                                                          fontWeight:
-                                                              FontWeight.bold))),
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
-                                              child: OutlineButton(
-                                                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.reservationUrl),
-                                                child: const Text('Book A Table',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize:
-                                                            TextSize.buttonText,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                              ),
-                                              //             fontWeight: FontWeight.bold))),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
+                                );
+                              },
                             );
-                          },
-                        );
-                      }).toList(),
-                    ),
+                          }).toList(),
+                        ),
+
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text('Welcome to',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                          const Text(AppString.appName,
+                              style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                          const Text('Best Quality And Tasty Food',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                          const SizedBox(height: 12),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+                              children: [
+                                if(homeProvider.settingsDataModel?.data!.orderStatus!=null
+                                    && homeProvider.settingsDataModel?.data!.orderStatus==true)
+                                  Expanded(
+                                    child: SolidButton(
+                                        onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
+                                        child: const Text('Order Online',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize:
+                                                TextSize.buttonText,
+                                                fontWeight:
+                                                FontWeight.bold))),
+                                  ),
+                                const SizedBox(width: 12),
+                                if(homeProvider.settingsDataModel?.data!.reservationStatus!=null
+                                    && homeProvider.settingsDataModel?.data!.reservationStatus==true)
+                                  Expanded(
+                                    child: OutlineButton(
+                                      onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.reservationUrl),
+                                      child: const Text('Book A Table',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize:
+                                              TextSize.buttonText,
+                                              fontWeight:
+                                              FontWeight.bold)),
+                                    ),
+                                    //             fontWeight: FontWeight.bold))),
+                                  )
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                   const SizedBox(height: 20),
 
                   Padding(
@@ -254,6 +259,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 20),
 
                         ///My Order
+                        if(homeProvider.settingsDataModel?.data!.orderStatus!=null
+                            && homeProvider.settingsDataModel?.data!.orderStatus==true)
                         ClipRRect(
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                           child: InkWell(

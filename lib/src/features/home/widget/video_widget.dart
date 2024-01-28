@@ -1,6 +1,9 @@
 import 'package:flutter/Material.dart';
+import 'package:order_online_app/core/constants/app_color.dart';
 import 'package:order_online_app/core/widgets/loading_widget.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../../../shared/api/api_endpoint.dart';
 
 class VideoWidget extends StatefulWidget {
   const VideoWidget({super.key, required this.videoUrl});
@@ -17,8 +20,9 @@ class _VideoWidgetState extends State<VideoWidget> {
   void initState() {
     super.initState();
     controller = VideoPlayerController.networkUrl(
-      Uri.parse(widget.videoUrl),
+      Uri.parse('${ApiEndpoint.imageUrlPath}/${widget.videoUrl}'),
     )..setLooping(true)..initialize()..play();
+    debugPrint('Video URL: ${ApiEndpoint.imageUrlPath}/${widget.videoUrl}');
   }
 
   @override
@@ -34,7 +38,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       child: controller != null
           ? VideoPlayer(controller!)
           : const Center(
-              child: LoadingWidget(),
+              child: LoadingWidget(color: AppColor.primaryColor),
             ),
     );
   }

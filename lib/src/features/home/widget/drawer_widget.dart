@@ -61,6 +61,8 @@ class DrawerWidget extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 24),
                 )),
             const SizedBox(height: 20),
+            if(homeProvider.settingsDataModel?.data!.orderStatus!=null
+                && homeProvider.settingsDataModel?.data!.orderStatus==true)
             SolidButton(
                 onTap: () =>
                     homeProvider.popAndNavigateToWebPage(WebEndpoint.orderUrl,context),
@@ -72,6 +74,8 @@ class DrawerWidget extends StatelessWidget {
                   style: TextStyle(fontSize: 24, color: AppColor.primaryColor),
                 )),
             const SizedBox(height: 20),
+            if(homeProvider.settingsDataModel?.data!.reservationStatus!=null
+                && homeProvider.settingsDataModel?.data!.reservationStatus==true)
             SolidButton(
                 onTap: () => homeProvider
                     .popAndNavigateToWebPage(WebEndpoint.reservationUrl,context),
