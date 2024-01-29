@@ -3,14 +3,18 @@ import 'package:order_online_app/core/utils/app_toast.dart';
 import 'package:order_online_app/shared/api/api_endpoint.dart';
 import 'package:order_online_app/src/features/home/model/settings_data_model.dart';
 import 'package:order_online_app/src/features/home/repository/home_repository.dart';
+import 'package:video_player/video_player.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 
 class HomeProvider extends ChangeNotifier {
   final HomeRepository _homeRepository = HomeRepository();
   bool loading = false;
+  bool loadingVideo = false;
   SettingsDataModel? settingsDataModel;
   List<String> sliderImageUrlList = [];
+
+  late VideoPlayerController videoController;
 
   Future<void> initialize() async {
     loading = true;
@@ -20,16 +24,37 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onRefresh()async{
+  Future<void> onRefresh() async {
     await getSettingsData();
   }
 
+  void initVideo() {
+    if(settingsDataModel?.data!.sliderVidEnable!=null && settingsDataModel?.data!.sliderVidEnable==true){
+      loadingVideo = true;
+      notifyListeners();
+      videoController = VideoPlayerController.networkUrl(
+          Uri.parse('${ApiEndpoint.imageUrlPath}/${settingsDataModel?.data!.sliderVid ?? ''}'));
+      videoController.initialize().then((value) {
+        videoController.play();
+        videoController.setLooping(true);
+        loadingVideo = false;
+        notifyListeners();
+      });
+    }
+  }
+
+  void disposeVideo() {
+    videoController.dispose();
+  }
+
   void navigateToWebPage(String urlPath) {
+    disposeVideo();
     final BuildContext context = AppNavigatorKey.key.currentState!.context;
     Navigator.pushNamed(context, AppRouter.webViewPage, arguments: urlPath);
   }
 
   void popAndNavigateToWebPage(String urlPath, BuildContext context) {
+    disposeVideo();
     Scaffold.of(context).closeEndDrawer();
     Navigator.pushNamed(context, AppRouter.webViewPage, arguments: urlPath);
   }
@@ -37,7 +62,8 @@ class HomeProvider extends ChangeNotifier {
   bool canPop() => AppNavigatorKey.key.currentState!.canPop();
 
   Future<void> getSettingsData() async {
-    await _homeRepository.getAppSettings().then((SettingsDataModel? response) async {
+    await _homeRepository.getAppSettings().then(
+        (SettingsDataModel? response) async {
       if (response != null) {
         sliderImageUrlList = [];
         settingsDataModel = response;
@@ -69,8 +95,6 @@ class HomeProvider extends ChangeNotifier {
           sliderImageUrlList.add(
               '${ApiEndpoint.imageUrlPath}/${settingsDataModel!.data!.sliderImgMobile5}');
         }
-
-        // sliderImageUrlList.add('https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4');
         notifyListeners();
       }
     }, onError: (error) {

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:order_online_app/src/features/home/provider/home_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/local_storage_key.dart';
 import '../../../core/constants/web_endpoint.dart';
@@ -25,10 +27,12 @@ class WebViewProvider extends ChangeNotifier {
   bool reloading = false;
 
   Future<void> goBack(BuildContext context) async {
+    final HomeProvider homeProvider = Provider.of(context,listen: false);
     bool canBack = await webViewController!.canGoBack();
     if (canBack) {
       webViewController!.goBack();
     } else {
+      homeProvider.initVideo();
       //ignore: use_build_context_synchronously
       Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home);
     }

@@ -119,7 +119,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 top: 65,
                 left: 10,
                 child: InkWell(
-                  onTap: ()async=> await webViewProvider.goBack(context),
+                  onTap: () async => await webViewProvider.goBack(context),
                   child: const CircleAvatar(
                     backgroundColor: AppColor.primaryColor,
                     child: Icon(Icons.arrow_back_ios_new,color: Colors.white),

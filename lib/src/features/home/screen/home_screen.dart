@@ -39,10 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return PopScope(
       canPop: false, // Allow popping by default
-      onPopInvoked: (value)async{
-        if(homeProvider.canPop()){
+      onPopInvoked: (value) async {
+        if (homeProvider.canPop()) {
           Navigator.pop(context);
-        }else{
+        } else {
           // ignore: use_build_context_synchronously
           final shouldExit = await showDialog(
             context: context,
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child:
-                  const Text('No', style: TextStyle(color: Colors.green)),
+                      const Text('No', style: TextStyle(color: Colors.green)),
                 ),
                 TextButton(
                   onPressed: () => SystemNavigator.pop(),
@@ -67,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: AppColor.cardColor,
         appBar: AppBar(
-          title: const Text(AppString.appName,style: TextStyle(color: Colors.white,fontSize: 24)),
+            title: const Text(AppString.appName,
+                style: TextStyle(color: Colors.white, fontSize: 24)),
             iconTheme: const IconThemeData(color: Colors.white)),
         endDrawer: Drawer(
           backgroundColor: Colors.black54,
@@ -77,228 +78,255 @@ class _HomeScreenState extends State<HomeScreen> {
         body: homeProvider.loading
             ? const Center(child: LoadingWidget())
             : RefreshIndicator(
-          backgroundColor: Colors.white,
-              onRefresh: ()async=> await homeProvider.onRefresh(),
-              child: ListView(
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      homeProvider.settingsDataModel?.data!.sliderVidEnable!=null
-                          && homeProvider.settingsDataModel?.data!.sliderVidEnable==true
-                          ? VideoWidget(videoUrl: homeProvider.settingsDataModel?.data!.sliderVid??'')
-                      :CarouselSlider(
-                          options: CarouselOptions(
-                            height: size.height*.4,
-                            autoPlay: true,
-                            scrollDirection: Axis.horizontal,
-                            viewportFraction: 1,
-                          ),
-                          items: homeProvider.sliderImageUrlList.map((mediaUrl) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                  width: double.infinity,
-                                  height: size.height*.4,
-                                  decoration: BoxDecoration(color: Colors.grey.shade300),
-                                  child: CachedNetworkImage(
-                                      imageUrl: mediaUrl,
-                                      placeholder: (context, url) => Container(
-                                            width: double.infinity,
-                                            height: size.height*.4,
+                backgroundColor: Colors.white,
+                onRefresh: () async => await homeProvider.onRefresh(),
+                child: ListView(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        homeProvider.settingsDataModel?.data!.sliderVidEnable !=
+                                    null && homeProvider.settingsDataModel?.data!.sliderVidEnable == true
+                            ? SizedBox(
+                                height: size.height * .35,
+                                child: VideoWidget(
+                                    videoUrl: homeProvider.settingsDataModel
+                                            ?.data!.sliderVid ?? ''))
+                            : CarouselSlider(
+                                options: CarouselOptions(
+                                  height: size.height * .35,
+                                  autoPlay: true,
+                                  scrollDirection: Axis.horizontal,
+                                  viewportFraction: 1,
+                                ),
+                                items: homeProvider.sliderImageUrlList
+                                    .map((mediaUrl) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        width: double.infinity,
+                                        height: size.height * .4,
+                                        decoration: BoxDecoration(
                                             color: Colors.grey.shade300),
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                              width: double.infinity,
-                                              height: size.height*.4,
-                                              color: Colors.grey.shade300),
-                                      width: double.infinity,
-                                      height: size.height*.4,
-                                      fit: BoxFit.cover),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ),
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text('Welcome to',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                          const Text(AppString.appName,
-                              style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                          const Text('Best Quality And Tasty Food',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                          const SizedBox(height: 12),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceAround,
-                              children: [
-                                if(homeProvider.settingsDataModel?.data!.orderStatus!=null
-                                    && homeProvider.settingsDataModel?.data!.orderStatus==true)
-                                  Expanded(
-                                    child: SolidButton(
-                                        onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
-                                        child: const Text('Order Online',
+                                        child: CachedNetworkImage(
+                                            imageUrl: mediaUrl,
+                                            placeholder: (context, url) =>
+                                                Container(
+                                                    width: double.infinity,
+                                                    height: size.height * .4,
+                                                    color:
+                                                        Colors.grey.shade300),
+                                            errorWidget: (context, url,
+                                                    error) =>
+                                                Container(
+                                                    width: double.infinity,
+                                                    height: size.height * .4,
+                                                    color:
+                                                        Colors.grey.shade300),
+                                            width: double.infinity,
+                                            height: size.height * .4,
+                                            fit: BoxFit.cover),
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text('Welcome to',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                            const Text(AppString.appName,
+                                style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                            const Text('Best Quality And Tasty Food',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                            const SizedBox(height: 12),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  if (homeProvider.settingsDataModel?.data!
+                                              .orderStatus !=
+                                          null &&
+                                      homeProvider.settingsDataModel?.data!
+                                              .orderStatus ==
+                                          true)
+                                    Expanded(
+                                      child: SolidButton(
+                                          onTap: () =>
+                                              homeProvider.navigateToWebPage(
+                                                  WebEndpoint.orderUrl),
+                                          child: const Text('Order Online',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: TextSize.buttonText,
+                                                  fontWeight:
+                                                      FontWeight.bold))),
+                                    ),
+                                  const SizedBox(width: 12),
+                                  if (homeProvider.settingsDataModel?.data!
+                                              .reservationStatus !=
+                                          null &&
+                                      homeProvider.settingsDataModel?.data!
+                                              .reservationStatus ==
+                                          true)
+                                    Expanded(
+                                      child: OutlineButton(
+                                        onTap: () =>
+                                            homeProvider.navigateToWebPage(
+                                                WebEndpoint.reservationUrl),
+                                        child: const Text('Book A Table',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize:
-                                                TextSize.buttonText,
-                                                fontWeight:
-                                                FontWeight.bold))),
-                                  ),
-                                const SizedBox(width: 12),
-                                if(homeProvider.settingsDataModel?.data!.reservationStatus!=null
-                                    && homeProvider.settingsDataModel?.data!.reservationStatus==true)
-                                  Expanded(
-                                    child: OutlineButton(
-                                      onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.reservationUrl),
-                                      child: const Text('Book A Table',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize:
-                                              TextSize.buttonText,
-                                              fontWeight:
-                                              FontWeight.bold)),
-                                    ),
-                                    //             fontWeight: FontWeight.bold))),
-                                  )
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Column(
-                      children: [
-                        ///Award
-                        ClipRRect(
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          child: InkWell(
-                            onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.awards),
-                            child: Stack(
-                              children: [
-                                Image.asset(
-                                  'assets/images/award.jpg',
-                                  width: size.width,
-                                  height: size.height * .3,
-                                  fit: BoxFit.cover,
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: size.width,
-                                  height: size.height * .3,
-                                  color: Colors.black.withOpacity(0.4),
-                                  child: const Text(
-                                    'Award',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                        height: 1,
-                                        color: Colors.white,
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        ///Gallery
-                        ClipRRect(
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          child: InkWell(
-                            onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.gallery),
-                            child: Stack(
-                              children: [
-                                Image.asset(
-                                  'assets/images/gallery.jpg',
-                                  width: size.width,
-                                  height: size.height * .3,
-                                  fit: BoxFit.cover,
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: size.width,
-                                  height: size.height * .3,
-                                  color: Colors.black.withOpacity(0.4),
-                                  child: const Text(
-                                    'Gallery',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                        height: 1,
-                                        color: Colors.white,
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        ///My Order
-                        if(homeProvider.settingsDataModel?.data!.orderStatus!=null
-                            && homeProvider.settingsDataModel?.data!.orderStatus==true)
-                        ClipRRect(
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          child: InkWell(
-                            onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
-                            child: Stack(
-                              children: [
-                                Image.asset(
-                                  'assets/images/cart.jpg',
-                                  width: size.width,
-                                  height: size.height * .3,
-                                  fit: BoxFit.cover,
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: size.width,
-                                  height: size.height * .3,
-                                  color: Colors.black.withOpacity(0.4),
-                                  child: const Text(
-                                    'My Order',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                        height: 1,
-                                        color: Colors.white,
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
+                                                fontSize: TextSize.buttonText,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                      //             fontWeight: FontWeight.bold))),
+                                    )
+                                ],
+                              ),
+                            )
+                          ],
+                        )
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        children: [
+                          ///Award
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            child: InkWell(
+                              onTap: () => homeProvider
+                                  .navigateToWebPage(WebEndpoint.awards),
+                              child: Stack(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/award.jpg',
+                                    width: size.width,
+                                    height: size.height * .3,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: size.width,
+                                    height: size.height * .3,
+                                    color: Colors.black.withOpacity(0.4),
+                                    child: const Text(
+                                      'Award',
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                          height: 1,
+                                          color: Colors.white,
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          ///Gallery
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            child: InkWell(
+                              onTap: () => homeProvider
+                                  .navigateToWebPage(WebEndpoint.gallery),
+                              child: Stack(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/gallery.jpg',
+                                    width: size.width,
+                                    height: size.height * .3,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: size.width,
+                                    height: size.height * .3,
+                                    color: Colors.black.withOpacity(0.4),
+                                    child: const Text(
+                                      'Gallery',
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                          height: 1,
+                                          color: Colors.white,
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          ///My Order
+                          if (homeProvider
+                                      .settingsDataModel?.data!.orderStatus !=
+                                  null &&
+                              homeProvider
+                                      .settingsDataModel?.data!.orderStatus ==
+                                  true)
+                            ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              child: InkWell(
+                                onTap: () => homeProvider
+                                    .navigateToWebPage(WebEndpoint.orderUrl),
+                                child: Stack(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/cart.jpg',
+                                      width: size.width,
+                                      height: size.height * .3,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: size.width,
+                                      height: size.height * .3,
+                                      color: Colors.black.withOpacity(0.4),
+                                      child: const Text(
+                                        'My Order',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
         bottomNavigationBar: Container(
           color: AppColor.secondaryColor,
           height: 60,
@@ -306,37 +334,40 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               InkWell(
-                onTap: ()=>homeProvider.navigateToWebPage(''),
+                onTap: () => homeProvider.navigateToWebPage(''),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.view_list,color: Colors.white),
-                    Text('Menu',style: TextStyle(color: Colors.white))
+                    Icon(Icons.view_list, color: Colors.white),
+                    Text('Menu', style: TextStyle(color: Colors.white))
                   ],
                 ),
               ),
-
               InkWell(
-                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
+                onTap: () =>
+                    homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(CupertinoIcons.shopping_cart,color: Colors.grey.shade400),
-                    Text('Order',style: TextStyle(color: Colors.grey.shade400))
+                    Icon(CupertinoIcons.shopping_cart,
+                        color: Colors.grey.shade400),
+                    Text('Order', style: TextStyle(color: Colors.grey.shade400))
                   ],
                 ),
               ),
-
               InkWell(
-                onTap: ()=>homeProvider.navigateToWebPage(WebEndpoint.profileUrl),
+                onTap: () =>
+                    homeProvider.navigateToWebPage(WebEndpoint.profileUrl),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(CupertinoIcons.person_fill,color: Colors.grey.shade400),
-                    Text('Profile',style: TextStyle(color: Colors.grey.shade400))
+                    Icon(CupertinoIcons.person_fill,
+                        color: Colors.grey.shade400),
+                    Text('Profile',
+                        style: TextStyle(color: Colors.grey.shade400))
                   ],
                 ),
               ),
@@ -346,5 +377,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }
