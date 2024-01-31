@@ -1,9 +1,9 @@
-import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/Material.dart';
 import 'package:order_online_app/core/utils/app_toast.dart';
 import 'package:order_online_app/shared/api/api_endpoint.dart';
 import 'package:order_online_app/src/features/home/model/settings_data_model.dart';
 import 'package:order_online_app/src/features/home/repository/home_repository.dart';
+import 'package:video_player/video_player.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 
@@ -14,7 +14,7 @@ class HomeProvider extends ChangeNotifier {
   SettingsDataModel? settingsDataModel;
   List<String> sliderImageUrlList = [];
 
-  late CachedVideoPlayerController videoController;
+  late VideoPlayerController videoController;
 
   Future<void> initialize() async {
     loading = true;
@@ -32,8 +32,8 @@ class HomeProvider extends ChangeNotifier {
     if(settingsDataModel?.data!.sliderVidEnable!=null && settingsDataModel?.data!.sliderVidEnable==true){
       loadingVideo = true;
       notifyListeners();
-      videoController = CachedVideoPlayerController.network(
-          '${ApiEndpoint.imageUrlPath}/${settingsDataModel?.data!.sliderVid ?? ''}');
+      videoController = VideoPlayerController.networkUrl(
+          Uri.parse('${ApiEndpoint.imageUrlPath}/${settingsDataModel?.data!.sliderVid ?? ''}'));
       videoController.initialize().then((value) {
         videoController.play();
         videoController.setLooping(true);
