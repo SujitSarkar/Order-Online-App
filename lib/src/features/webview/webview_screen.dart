@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:order_online_app/core/router/app_router.dart';
 import 'package:order_online_app/core/utils/local_storage.dart';
+import 'package:order_online_app/shared/api/api_service.dart';
 import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
@@ -57,7 +58,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                       handlerName: 'callNativeLogin',
                       callback: (args) async{
                         await callNativeLogin();
-                        webViewProvider.refresh();
+                        await webViewProvider.getLocalData();
                         return webViewProvider.loginResponseModel?.data?.accessToken;
                       },
                     );
@@ -138,8 +139,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
     WebViewProvider webViewProvider = Provider.of(context, listen: false);
     await clearLocalData();
     await webViewProvider.getLocalData();
-    await webViewProvider.refresh();
     await FirebaseAuth.instance.signOut();
+    ApiService.instance.clearAccessToken();
     // return;
   }
 }

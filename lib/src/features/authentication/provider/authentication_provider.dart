@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:order_online_app/src/features/authentication/model/reset_password_model.dart';
-import 'package:order_online_app/src/features/webview/webview_provider.dart';
-import 'package:provider/provider.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
@@ -99,14 +97,11 @@ class AuthenticationProvider extends ChangeNotifier {
       notifyListeners();
       if (response != null) {
         await setData(LocalStorageKey.loginResponseKey,
-            loginResponseModelToJson(response))
-            .then((value) async {
+            loginResponseModelToJson(response)).then((value) async {
           final BuildContext context = AppNavigatorKey.key.currentState!.context;
           ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
-          final WebViewProvider webViewProvider = Provider.of(context, listen: false);
-          await webViewProvider.getLocalData().then((value) =>
-              Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage));
+          Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -143,11 +138,7 @@ class AuthenticationProvider extends ChangeNotifier {
               AppNavigatorKey.key.currentState!.context;
           ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
-          final WebViewProvider webViewProvider =
-          Provider.of(context, listen: false);
-          await webViewProvider.getLocalData().then((value) =>
-              Navigator.of(context).popUntil(
-                      (route) => route.settings.name == AppRouter.webViewPage));
+          Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -195,9 +186,7 @@ class AuthenticationProvider extends ChangeNotifier {
               final BuildContext context = AppNavigatorKey.key.currentState!.context;
               ApiService.instance.addAccessToken(response.data?.accessToken);
               clearAllData();
-              final WebViewProvider webViewProvider = Provider.of(context, listen: false);
-              await webViewProvider.getLocalData().then((value) =>
-                  Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage));
+              Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
             }, onError: (error) {
               showToast(error.toString());
             });
