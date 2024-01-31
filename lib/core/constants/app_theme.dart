@@ -23,7 +23,7 @@ class AppTheme {
       cupertinoOverrideTheme: NoDefaultCupertinoThemeData(
           brightness: Brightness.light,
           scaffoldBackgroundColor: AppColor.appBodyBg,
-          barBackgroundColor: AppColor.cardColor,
+          barBackgroundColor: AppColor.appBodyBg,
           primaryColor: AppColor.primaryColor,
           primaryContrastingColor: AppColor.primaryColor,
           textTheme: CupertinoTextThemeData(
@@ -74,11 +74,4 @@ class AppTheme {
 
   static var deviceOrientation = SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
-  static var hideStatusBar =
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-
-  static var showStatusBar = SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: SystemUiOverlay.values);
 }

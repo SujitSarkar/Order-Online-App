@@ -6,7 +6,6 @@ class AppColor {
   static const Color secondaryColor = Color(0xff832161);
 
   static const Color errorColor = Colors.red;
-  static const Color enableColor = Colors.green;
   static const Color disableColor = Colors.grey;
   static const Color warningColor = Color.fromARGB(255, 217, 155, 9);
 
