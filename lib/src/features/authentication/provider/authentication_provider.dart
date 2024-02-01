@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:order_online_app/src/features/authentication/model/reset_password_model.dart';
 import '../../../../core/constants/local_storage_key.dart';
@@ -30,7 +31,8 @@ class AuthenticationProvider extends ChangeNotifier {
 
   bool rememberMe = true;
   bool privacyPolicyUrl = true;
-  late UserCredential? userCredential;
+  late UserCredential? googleUserCredential;
+  late UserCredential? facebookUserCredential;
 
   ///Functions::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   void clearAllData() {
@@ -156,25 +158,23 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
 
-      userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      if (userCredential != null) {
-        debugPrint(userCredential!.user!.uid);
-        debugPrint(userCredential!.user!.displayName);
-        debugPrint(userCredential!.user!.email);
+      googleUserCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      if (googleUserCredential != null) {
+        debugPrint(googleUserCredential!.user!.uid);
+        debugPrint(googleUserCredential!.user!.displayName);
+        debugPrint(googleUserCredential!.user!.email);
 
         final Map<String, dynamic> requestBody = {
           'authProvider': 'google',
-          'uid': userCredential?.user?.uid,
-          'name': userCredential?.user?.displayName,
-          'email': userCredential?.user?.email,
+          'uid': googleUserCredential?.user?.uid,
+          'name': googleUserCredential?.user?.displayName,
+          'email': googleUserCredential?.user?.email,
           "device_name": "Dev1@CF",
         };
 
@@ -202,6 +202,67 @@ class AuthenticationProvider extends ChangeNotifier {
       debugPrint('Google Login Error: ${error.toString()}');
     }
     googleLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> signInWithFacebook() async {
+    /// SHA1 after remove special char = 2B7EACA3F0F2838DD982AEE53CDBC6B743A4DE19
+
+    /// Bundle ID = com.digitafact.orderOnlineApp
+    /// Package Name = com.digitafact.order_online_app
+    /// Default Activity Class Name = com.digitafact.order_online_app.MainActivity
+    /// Key Hashes = K36so/Dyg43Zgq7lPNvGt0Ok3hk=
+
+    ApiService.instance.clearAccessToken();
+    facebookLoading = true;
+    notifyListeners();
+
+    try{
+      final LoginResult result = await FacebookAuth.instance.login();
+        if(result.status == LoginStatus.success){
+          final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken!.token);
+          facebookUserCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+          debugPrint(facebookUserCredential!.user!.uid);
+          debugPrint(facebookUserCredential!.user!.displayName);
+          debugPrint(facebookUserCredential!.user!.email);
+
+          final Map<String, dynamic> requestBody = {
+            'authProvider': 'facebook',
+            'uid': facebookUserCredential?.user?.uid,
+            'name': facebookUserCredential?.user?.displayName,
+            'email': facebookUserCredential?.user?.email,
+            "device_name": "Dev1@CF",
+          };
+
+          await _authRepository.socialLogin(requestBody: requestBody).then(
+                  (LoginResponseModel? response) async {
+                if (response != null) {
+                  await setData(LocalStorageKey.loginResponseKey,
+                      loginResponseModelToJson(response)).then((value) async {
+                    final BuildContext context = AppNavigatorKey.key.currentState!.context;
+                    ApiService.instance.addAccessToken(response.data?.accessToken);
+                    clearAllData();
+                    Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+                  }, onError: (error) {
+                    showToast(error.toString());
+                  });
+                }
+              }, onError: (error) {
+            showToast(error.toString());
+          });
+        }else if(result.status == LoginStatus.cancelled){
+          showToast('Facebook login canceled');
+        }else if(result.status == LoginStatus.failed){
+          showToast('Facebook login failed');
+        }else{
+          showToast('Facebook Login Status: ${result.status.toString()}');
+        }
+    }catch(error) {
+      showToast('Facebook Login Error: ${error.toString()}');
+      debugPrint('Facebook Login Error: ${error.toString()}');
+    }
+    facebookLoading = false;
     notifyListeners();
   }
 
