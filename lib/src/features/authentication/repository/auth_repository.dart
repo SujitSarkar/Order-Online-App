@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:order_online_app/core/utils/app_toast.dart';
+import 'package:order_online_app/core/utils/local_storage.dart';
 import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../model/login_response_model.dart';
@@ -69,5 +71,19 @@ class AuthRepository {
       showToast(error.message ?? 'Something went wrong');
     });
     return result;
+  }
+
+  Future<void> logout()async{
+    await clearLocalData();
+    ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
+    }, onSuccess: (response) async {
+      debugPrint(response.body);
+    }, onError: (error) {
+      debugPrint(error.message ?? 'Error Logout');
+    });
+    FirebaseAuth.instance.signOut();
+    ApiService.instance.clearAccessToken();
   }
 }

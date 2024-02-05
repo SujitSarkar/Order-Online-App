@@ -26,6 +26,7 @@ class ApiService {
 
   void addAccessToken(String? token) {
     headers.addEntries({'Authorization': 'Bearer $token'}.entries);
+    debugPrint('Access Token::::: ${headers['Authorization']}');
   }
 
   void clearAccessToken() {

@@ -1,9 +1,13 @@
 import 'package:flutter/Material.dart';
 import 'package:order_online_app/core/constants/app_color.dart';
+import 'package:order_online_app/core/constants/app_string.dart';
+import 'package:order_online_app/core/utils/extensions.dart';
 import 'package:order_online_app/core/widgets/solid_button.dart';
 import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/web_endpoint.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/utils/validator.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
@@ -18,74 +22,117 @@ class DrawerWidget extends StatelessWidget {
             MediaQuery.of(context).padding.top,
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                onPressed: () => Scaffold.of(context).closeEndDrawer(),
+                onPressed: () => Scaffold.of(context).closeDrawer(),
                 icon: const Icon(Icons.cancel_outlined,
                     color: Colors.white, size: 30),
               ),
             ),
-            const SizedBox(height: 100),
-            InkWell(
-                onTap: () => homeProvider.popAndNavigateToWebPage('',context),
-                child: const Text(
-                  'Home',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                )),
-            const SizedBox(height: 20),
-            InkWell(
-                onTap: () =>
-                    homeProvider.popAndNavigateToWebPage(WebEndpoint.awards,context),
-                child: const Text(
-                  'Awards',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                )),
-            const SizedBox(height: 20),
-            InkWell(
-                onTap: () =>
-                    homeProvider.popAndNavigateToWebPage(WebEndpoint.gallery,context),
-                child: const Text(
-                  'Gallery',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                )),
-            const SizedBox(height: 20),
-            InkWell(
-                onTap: () =>
-                    homeProvider.popAndNavigateToWebPage(WebEndpoint.contact,context),
-                child: const Text(
-                  'Contact',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                )),
-            const SizedBox(height: 20),
-            if(homeProvider.settingsDataModel?.data!.orderStatus!=null
-                && homeProvider.settingsDataModel?.data!.orderStatus==true)
-            SolidButton(
-                onTap: () =>
-                    homeProvider.popAndNavigateToWebPage(WebEndpoint.orderUrl,context),
-                backgroundColor: Colors.white,
-                width: 200,
-                borderRadius: const BorderRadius.all(Radius.circular(50)),
-                child: const Text(
-                  'Order Online',
-                  style: TextStyle(fontSize: 24, color: AppColor.primaryColor),
-                )),
-            const SizedBox(height: 20),
-            if(homeProvider.settingsDataModel?.data!.reservationStatus!=null
-                && homeProvider.settingsDataModel?.data!.reservationStatus==true)
-            SolidButton(
-                onTap: () => homeProvider
-                    .popAndNavigateToWebPage(WebEndpoint.reservationUrl,context),
-                backgroundColor: Colors.white,
-                width: 200,
-                borderRadius: const BorderRadius.all(Radius.circular(50)),
-                child: const Text(
-                  'Reservation',
-                  style: TextStyle(fontSize: 24, color: AppColor.primaryColor),
-                )),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * .1),
+                InkWell(
+                    onTap: () =>
+                        homeProvider.popAndNavigateToWebPage('', context),
+                    child: const Text(
+                      'Home',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    )),
+                const SizedBox(height: 28),
+                InkWell(
+                    onTap: () => homeProvider.popAndNavigateToWebPage(
+                        WebEndpoint.awards, context),
+                    child: const Text(
+                      'Awards',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    )),
+                const SizedBox(height: 28),
+                InkWell(
+                    onTap: () => homeProvider.popAndNavigateToWebPage(
+                        WebEndpoint.gallery, context),
+                    child: const Text(
+                      'Gallery',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    )),
+                const SizedBox(height: 28),
+                InkWell(
+                    onTap: () => homeProvider.popAndNavigateToWebPage(
+                        WebEndpoint.contact, context),
+                    child: const Text(
+                      'Contact',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    )),
+                const SizedBox(height: 28),
+                homeProvider.loginResponseModel?.data?.accessToken == null
+                    ? InkWell(
+                        onTap: () {
+                          Scaffold.of(context).closeDrawer();
+                          Navigator.pushNamed(context, AppRouter.signIn,
+                              arguments: AppString.fromPageList.first);
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white, fontSize: 24),
+                        ))
+                    : InkWell(
+                        onTap: () async {
+                          Scaffold.of(context).closeDrawer();
+                          await homeProvider.logoutButtonOnTap();
+                        },
+                        child: const Text(
+                          'Logout',
+                          style: TextStyle(color: Colors.white, fontSize: 24),
+                        )),
+                const SizedBox(height: 28),
+                if (homeProvider.settingsDataModel?.data!.orderStatus != null &&
+                    homeProvider.settingsDataModel?.data!.orderStatus == true)
+                  SolidButton(
+                      onTap: () async {
+                        if (homeProvider.settingsDataModel!.data!
+                            .redirectLinkOrder!.isLinkValidate) {
+                          await openUrlOnExternal(homeProvider
+                              .settingsDataModel!.data!.redirectLinkOrder!);
+                        } else {
+                          homeProvider.popAndNavigateToWebPage(
+                              WebEndpoint.orderUrl, context);
+                        }
+                      },
+                      backgroundColor: Colors.white,
+                      width: 200,
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      child: const Text(
+                        'Order Online',
+                        style: TextStyle(
+                            fontSize: 24, color: AppColor.primaryColor),
+                      )),
+                const SizedBox(height: 28),
+                if (homeProvider.settingsDataModel?.data!.reservationStatus !=
+                        null &&
+                    homeProvider.settingsDataModel?.data!.reservationStatus ==
+                        true)
+                  SolidButton(
+                      onTap: () async{
+                        if (homeProvider.settingsDataModel!.data!.redirectLinkReservation!.isLinkValidate) {
+                          await openUrlOnExternal(homeProvider.settingsDataModel!.data!.redirectLinkReservation!);
+                        } else {
+                          homeProvider.popAndNavigateToWebPage(WebEndpoint.reservationUrl,context);
+                        }
+                      },
+                      backgroundColor: Colors.white,
+                      width: 200,
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      child: const Text(
+                        'Reservation',
+                        style: TextStyle(
+                            fontSize: 24, color: AppColor.primaryColor),
+                      )),
+              ],
+            ),
           ],
         ),
       ),

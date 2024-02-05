@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:order_online_app/core/constants/app_string.dart';
 import 'package:order_online_app/core/router/app_router.dart';
 import 'package:order_online_app/core/utils/local_storage.dart';
 import 'package:order_online_app/shared/api/api_service.dart';
+import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
@@ -89,14 +91,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   },
                   onUpdateVisitedHistory:
                       (controller, url, androidIsReload) async {
-                    debugPrint(
-                        '::::::::::::::onUpdateVisitedHistory:::::::::::::::::${url.toString()}');
+                    debugPrint('::::::::::::::onUpdateVisitedHistory:::::::::::::::::${url.toString()}');
                     webViewProvider.updateUrl(url.toString());
                   },
-                  onLoadResource: (controller, resource) {
+                  onLoadResource: (controller, resource) async {
                     debugPrint('::::::::::::::onLoadResource:::::::::::::::::');
-                    debugPrint(
-                        '::::::::::::::${resource.url}:::::::::::::::::');
+                    debugPrint('::::::::::::::${resource.url}:::::::::::::::::');
+                    await webViewProvider.setAccessTokenToWebViewCache();
                   },
                 ),
               )
@@ -120,7 +121,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 top: 65,
                 left: 10,
                 child: InkWell(
-                  onTap: () async => await webViewProvider.goBack(context),
+                  onTap: () async => Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home),
                   child: const CircleAvatar(
                     backgroundColor: AppColor.primaryColor,
                     child: Icon(Icons.arrow_back_ios_new,color: Colors.white),
@@ -131,16 +132,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
       );
 
   Future<void> callNativeLogin()async{
-    await Navigator.pushNamed(context, AppRouter.signIn);
+    await Navigator.pushNamed(context, AppRouter.signIn,arguments: AppString.fromPageList.last);
     // return;
   }
 
   Future<void> callNativeLogout() async {
     WebViewProvider webViewProvider = Provider.of(context, listen: false);
+    HomeProvider homeProvider = Provider.of(context, listen: false);
+
     await clearLocalData();
     await webViewProvider.getLocalData();
-    await FirebaseAuth.instance.signOut();
+    await homeProvider.initialize();
     ApiService.instance.clearAccessToken();
-    // return;
+    FirebaseAuth.instance.signOut();
   }
 }

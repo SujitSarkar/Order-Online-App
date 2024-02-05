@@ -20,18 +20,20 @@ class GeneratedRoute {
                 const SplashScreen());
 
       case AppRouter.signIn:
+        final String arguments = settings.arguments as String;
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-                const SignInScreen());
+                SignInScreen(fromPage: arguments));
 
       case AppRouter.signup:
+        final String arguments = settings.arguments as String;
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-            const SignupScreen());
+            SignupScreen(fromPage: arguments));
 
       case AppRouter.forgotPassword:
         return PageRouteBuilder(

@@ -2,7 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:order_online_app/core/constants/app_string.dart';
 import 'package:order_online_app/src/features/authentication/model/reset_password_model.dart';
+import 'package:order_online_app/src/features/home/provider/home_provider.dart';
+import 'package:order_online_app/src/features/webview/webview_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
@@ -59,7 +63,8 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signupButtonOnTap() async {
+  Future<void> signupButtonOnTap(String fromPage) async {
+    debugPrint('Triggered from $fromPage');
     ApiService.instance.clearAccessToken();
     if (!signupFormKey.currentState!.validate()) {
       return;
@@ -98,12 +103,19 @@ class AuthenticationProvider extends ChangeNotifier {
       loading = false;
       notifyListeners();
       if (response != null) {
-        await setData(LocalStorageKey.loginResponseKey,
-            loginResponseModelToJson(response)).then((value) async {
+        await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response)).then((value) async {
           final BuildContext context = AppNavigatorKey.key.currentState!.context;
+          final HomeProvider homeProvider = Provider.of(context,listen: false);
+          homeProvider.initialize();
           ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
-          Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+          if(fromPage==AppString.fromPageList.last){
+            final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+            webViewProvider.getLocalData();
+            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+          }else{
+           Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
+          }
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -111,7 +123,8 @@ class AuthenticationProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> signInButtonOnTap() async {
+  Future<void> signInButtonOnTap(String fromPage) async {
+    debugPrint('Triggered from $fromPage');
     ApiService.instance.clearAccessToken();
     if (!signInFormKey.currentState!.validate()) {
       return;
@@ -134,13 +147,19 @@ class AuthenticationProvider extends ChangeNotifier {
         (LoginResponseModel? response) async {
       if (response != null) {
         await setData(LocalStorageKey.loginResponseKey,
-            loginResponseModelToJson(response))
-            .then((value) async {
-          final BuildContext context =
-              AppNavigatorKey.key.currentState!.context;
+            loginResponseModelToJson(response)).then((value) async {
+          final BuildContext context = AppNavigatorKey.key.currentState!.context;
           ApiService.instance.addAccessToken(response.data?.accessToken);
+          final HomeProvider homeProvider = Provider.of(context,listen: false);
+          homeProvider.initialize();
           clearAllData();
-          Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+          if(fromPage==AppString.fromPageList.last){
+            final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+            webViewProvider.getLocalData();
+            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+          }else{
+            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
+          }
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -152,7 +171,8 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(String fromPage) async {
+    debugPrint('Triggered from $fromPage');
     ApiService.instance.clearAccessToken();
     googleLoading = true;
     notifyListeners();
@@ -185,8 +205,16 @@ class AuthenticationProvider extends ChangeNotifier {
                     loginResponseModelToJson(response)).then((value) async {
               final BuildContext context = AppNavigatorKey.key.currentState!.context;
               ApiService.instance.addAccessToken(response.data?.accessToken);
+              final HomeProvider homeProvider = Provider.of(context,listen: false);
+              homeProvider.initialize();
               clearAllData();
-              Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+              if(fromPage==AppString.fromPageList.last){
+                final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+                webViewProvider.getLocalData();
+                Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+              }else{
+                Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
+              }
             }, onError: (error) {
               showToast(error.toString());
             });
@@ -205,7 +233,8 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signInWithFacebook() async {
+  Future<void> signInWithFacebook(String fromPage) async {
+    debugPrint('Triggered from $fromPage');
     /// SHA1 after remove special char = 2B7EACA3F0F2838DD982AEE53CDBC6B743A4DE19
 
     /// Bundle ID = com.digitafact.orderOnlineApp
@@ -242,8 +271,16 @@ class AuthenticationProvider extends ChangeNotifier {
                       loginResponseModelToJson(response)).then((value) async {
                     final BuildContext context = AppNavigatorKey.key.currentState!.context;
                     ApiService.instance.addAccessToken(response.data?.accessToken);
+                    final HomeProvider homeProvider = Provider.of(context,listen: false);
+                    homeProvider.initialize();
                     clearAllData();
-                    Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+                    if(fromPage==AppString.fromPageList.last){
+                      final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+                      webViewProvider.getLocalData();
+                      Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+                    }else{
+                      Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
+                    }
                   }, onError: (error) {
                     showToast(error.toString());
                   });

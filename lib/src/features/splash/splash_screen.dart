@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:order_online_app/core/constants/app_string.dart';
+import 'package:order_online_app/src/features/home/provider/home_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/router/app_router.dart';
 
@@ -12,7 +14,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final StreamController<int> _controller = StreamController<int>();
 
   @override
   void initState() {
@@ -20,16 +21,11 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _controller.close();
-    super.dispose();
-  }
-
   Future<void> onInit() async {
-    await Future.delayed(const Duration(milliseconds: 1200)).then((value) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, AppRouter.home, (route) => false);
+    final HomeProvider homeProvider = Provider.of(context,listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      await homeProvider.initialize().then((value) => Navigator.pushNamedAndRemoveUntil(
+          context, AppRouter.home, (route) => false));
     });
   }
 

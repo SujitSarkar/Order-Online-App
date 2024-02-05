@@ -11,7 +11,8 @@ import '../../../../core/widgets/text_field_widget.dart';
 import '../provider/authentication_provider.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+  const SignInScreen({super.key, required this.fromPage});
+  final String fromPage;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +100,7 @@ class SignInScreen extends StatelessWidget {
                 ///Login Button
                 SolidButton(
                     onTap: () async {
-                      await authProvider.signInButtonOnTap();
+                      await authProvider.signInButtonOnTap(fromPage);
                     },
                     child: authProvider.loading
                         ? const LoadingWidget(color: Colors.white)
@@ -125,7 +126,7 @@ class SignInScreen extends StatelessWidget {
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             authProvider.clearPassword();
-                            Navigator.pushNamed(context, AppRouter.signup);
+                            Navigator.pushNamed(context, AppRouter.signup,arguments: fromPage);
                           },
                       ),
                     ],
@@ -158,7 +159,7 @@ class SignInScreen extends StatelessWidget {
                 ///Google Login Button
                 SolidButton(
                     onTap: () async{
-                      await authProvider.signInWithGoogle();
+                      await authProvider.signInWithGoogle(fromPage);
                     },
                     backgroundColor: AppColor.googleButtonColor,
                     child: Row(

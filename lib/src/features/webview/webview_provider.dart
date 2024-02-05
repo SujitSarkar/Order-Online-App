@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:order_online_app/src/features/home/provider/home_provider.dart';
-import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/local_storage_key.dart';
 import '../../../core/constants/web_endpoint.dart';
@@ -27,12 +25,11 @@ class WebViewProvider extends ChangeNotifier {
   bool reloading = false;
 
   Future<void> goBack(BuildContext context) async {
-    final HomeProvider homeProvider = Provider.of(context,listen: false);
     bool canBack = await webViewController!.canGoBack();
     if (canBack) {
       webViewController!.goBack();
     } else {
-      homeProvider.initVideo();
+      // homeProvider.initVideo();
       //ignore: use_build_context_synchronously
       Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home);
     }
@@ -56,10 +53,23 @@ class WebViewProvider extends ChangeNotifier {
   }
 
   Future<void> getLocalData() async {
-    final loginResponseFromLocal =
-        await getData(LocalStorageKey.loginResponseKey);
+    loginResponseModel = null;
+    final loginResponseFromLocal = await getData(LocalStorageKey.loginResponseKey);
     if (loginResponseFromLocal != null) {
       loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
+    }
+  }
+
+  Future<void> setAccessTokenToWebViewCache()async{
+    if(loginResponseModel!=null){
+      await webViewController?.evaluateJavascript(
+        source: "localStorage.setItem('access_token', '${loginResponseModel?.data?.accessToken}');",
+      );
+      await webViewController?.evaluateJavascript(
+        source: "localStorage.getItem('access_token')",
+      ).then((result) {
+        debugPrint("\n\nRetrieved access token:::::::::: $result\n\n");
+      });
     }
   }
 

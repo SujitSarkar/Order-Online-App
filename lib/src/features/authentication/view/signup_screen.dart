@@ -12,7 +12,8 @@ import '../../../../core/widgets/text_field_widget.dart';
 import '../provider/authentication_provider.dart';
 
 class SignupScreen extends StatelessWidget {
-  const SignupScreen({super.key});
+  const SignupScreen({super.key, required this.fromPage});
+  final String fromPage;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +142,7 @@ class SignupScreen extends StatelessWidget {
                 ///Signup Button
                 SolidButton(
                     onTap: () async {
-                      await authProvider.signupButtonOnTap();
+                      await authProvider.signupButtonOnTap(fromPage);
                     },
                     child: authProvider.loading
                         ? const LoadingWidget(color: Colors.white)
@@ -200,7 +201,7 @@ class SignupScreen extends StatelessWidget {
                 ///Google Login Button
                 SolidButton(
                     onTap: () async {
-                      await authProvider.signInWithGoogle();
+                      await authProvider.signInWithGoogle(fromPage);
                     },
                     backgroundColor: AppColor.googleButtonColor,
                     child: Row(
