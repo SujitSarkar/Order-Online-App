@@ -18,7 +18,7 @@ class AuthRepository {
     }, onSuccess: (response) async {
       debugPrint(response.body);
       result = loginResponseModelFromJson(response.body);
-      showToast(result!.message??'');
+      showToast(result!.message ?? '');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');
@@ -26,7 +26,8 @@ class AuthRepository {
     return result;
   }
 
-  Future<LoginResponseModel?> signup({required Map<String, dynamic> requestBody}) async {
+  Future<LoginResponseModel?> signup(
+      {required Map<String, dynamic> requestBody}) async {
     LoginResponseModel? result;
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
@@ -35,7 +36,7 @@ class AuthRepository {
     }, onSuccess: (response) async {
       debugPrint(response.body);
       result = loginResponseModelFromJson(response.body);
-      showToast(result!.message??'');
+      showToast(result!.message ?? '');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');
@@ -43,7 +44,8 @@ class AuthRepository {
     return result;
   }
 
-  Future<LoginResponseModel?> socialLogin({required Map<String, dynamic> requestBody}) async {
+  Future<LoginResponseModel?> socialLogin(
+      {required Map<String, dynamic> requestBody}) async {
     LoginResponseModel? result;
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
@@ -51,7 +53,7 @@ class AuthRepository {
           body: requestBody);
     }, onSuccess: (response) async {
       result = loginResponseModelFromJson(response.body);
-      showToast(result!.message??'');
+      showToast(result!.message ?? '');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');
@@ -69,7 +71,7 @@ class AuthRepository {
     }, onSuccess: (response) async {
       debugPrint(response.body);
       result = resetPasswordResponseModelFromJson(response.body);
-      showToast(result!.message??'');
+      showToast(result!.message ?? '');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');
@@ -77,16 +79,18 @@ class AuthRepository {
     return result;
   }
 
-  Future<void> logout()async{
+  Future<void> logout() async {
     await clearLocalData();
-    ApiService.instance.apiCall(execute: () async {
-      return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
-    }, onSuccess: (response) async {
-      debugPrint(response.body);
-    }, onError: (error) {
-      debugPrint(error.message ?? 'Error Logout');
-    });
+    ApiService.instance.apiCall(
+        execute: () async {
+          return await ApiService.instance
+              .post('${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
+        },
+        onSuccess: (response) async {},
+        onError: (error) {
+          debugPrint(error.message ?? 'Error Logout');
+          showToast(error.message ?? 'Error Logout');
+        });
     FirebaseAuth.instance.signOut();
     ApiService.instance.clearAccessToken();
   }

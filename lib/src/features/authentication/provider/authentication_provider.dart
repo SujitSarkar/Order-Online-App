@@ -164,8 +164,6 @@ class AuthenticationProvider extends ChangeNotifier {
           showToast(error.toString());
         });
       }
-    }, onError: (error) {
-      showToast(error.toString());
     });
     loading = false;
     notifyListeners();
@@ -219,8 +217,6 @@ class AuthenticationProvider extends ChangeNotifier {
               showToast(error.toString());
             });
           }
-        }, onError: (error) {
-          showToast(error.toString());
         });
       } else {
         showToast('User data not found');
@@ -285,9 +281,7 @@ class AuthenticationProvider extends ChangeNotifier {
                     showToast(error.toString());
                   });
                 }
-              }, onError: (error) {
-            showToast(error.toString());
-          });
+              });
         }else if(result.status == LoginStatus.cancelled){
           showToast('Facebook login canceled');
         }else if(result.status == LoginStatus.failed){
