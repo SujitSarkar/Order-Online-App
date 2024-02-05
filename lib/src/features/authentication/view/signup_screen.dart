@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
-import '../../../../core/constants/web_endpoint.dart';
+import '../../../../shared/api/web_endpoint.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/solid_button.dart';
 import '../../../../core/widgets/text_field_widget.dart';
@@ -140,19 +140,42 @@ class SignupScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 ///Signup Button
-                SolidButton(
-                    onTap: () async {
-                      await authProvider.signupButtonOnTap(fromPage);
-                    },
-                    child: authProvider.loading
-                        ? const LoadingWidget(color: Colors.white)
-                        : const Text(
-                            'SIGN UP',
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child:  SolidButton(
+                          onTap: () async {
+                            Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home);
+                          },
+                          backgroundColor: AppColor.disableColor,
+                          child: const Text(
+                            'HOME',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: TextSize.buttonText,
                                 fontWeight: FontWeight.bold),
                           )),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      flex: 2,
+                      child: SolidButton(
+                          onTap: () async {
+                            await authProvider.signupButtonOnTap(fromPage);
+                          },
+                          child: authProvider.loading
+                              ? const LoadingWidget(color: Colors.white)
+                              : const Text(
+                                  'SIGN UP',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: TextSize.buttonText,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 24),
 
                 ///Already have an account

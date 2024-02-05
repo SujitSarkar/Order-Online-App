@@ -98,19 +98,42 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 ///Login Button
-                SolidButton(
-                    onTap: () async {
-                      await authProvider.signInButtonOnTap(fromPage);
-                    },
-                    child: authProvider.loading
-                        ? const LoadingWidget(color: Colors.white)
-                        : const Text(
-                            'LOGIN',
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child:  SolidButton(
+                          onTap: () async {
+                            Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home);
+                          },
+                          backgroundColor: AppColor.disableColor,
+                          child: const Text(
+                            'HOME',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: TextSize.buttonText,
                                 fontWeight: FontWeight.bold),
                           )),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      flex: 2,
+                      child: SolidButton(
+                          onTap: () async {
+                            await authProvider.signInButtonOnTap(fromPage);
+                          },
+                          child: authProvider.loading
+                              ? const LoadingWidget(color: Colors.white)
+                              : const Text(
+                                  'LOGIN',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: TextSize.buttonText,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 24),
 
                 ///Create Account
