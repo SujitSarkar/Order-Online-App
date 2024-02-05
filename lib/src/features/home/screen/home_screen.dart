@@ -14,7 +14,7 @@ import 'package:order_online_app/core/widgets/solid_button.dart';
 import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 import 'package:order_online_app/src/features/home/widget/drawer_widget.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/constants/web_endpoint.dart';
+import '../../../../shared/api/web_endpoint.dart';
 import '../../../../core/utils/validator.dart';
 import '../../../../core/widgets/card_placeholder_widget.dart';
 import '../../../../shared/api/api_endpoint.dart';

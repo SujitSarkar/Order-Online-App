@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/local_storage_key.dart';
-import '../../../core/constants/web_endpoint.dart';
+import '../../../shared/api/web_endpoint.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/utils/local_storage.dart';
 import '../authentication/model/login_response_model.dart';

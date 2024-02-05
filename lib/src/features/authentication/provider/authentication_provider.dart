@@ -91,8 +91,8 @@ class AuthenticationProvider extends ChangeNotifier {
       "email": emailController.text.trim(),
       "name": nameController.text.trim(),
       "phone": phoneController.text.trim(),
-      "password": passwordController.text.trim(),
-      "password_confirmation": confirmPasswordController.text.trim(),
+      "password": passwordController.text,
+      "password_confirmation": confirmPasswordController.text,
       "device_name": "Dev1@CF"
     };
     debugPrint(requestBody.toString());
@@ -138,7 +138,7 @@ class AuthenticationProvider extends ChangeNotifier {
 
     Map<String, dynamic> requestBody = {
       "email": emailController.text.trim(),
-      "password": passwordController.text.trim(),
+      "password": passwordController.text,
       "device_name": "Dev1@CF",
       "remember": 'false'
     };
@@ -320,7 +320,6 @@ class AuthenticationProvider extends ChangeNotifier {
     await _authRepository.resetPassword(requestBody: requestBody).then(
         (ResetPasswordResponseModel? response) async {
       if (response != null && response.status == true) {
-        showToast(response.message ?? '');
         Navigator.pop(AppNavigatorKey.key.currentState!.context);
       }
     }, onError: (error) {

@@ -40,7 +40,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
       canPop: false,
       onPopInvoked: (value) async => await webViewProvider.goBack(context),
       child: Scaffold(
-          backgroundColor: AppColor.cardColor, body: _bodyUI(webViewProvider)),
+          backgroundColor: AppColor.cardColor,
+          body: _bodyUI(webViewProvider)),
     );
   }
 

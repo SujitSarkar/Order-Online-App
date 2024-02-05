@@ -18,6 +18,7 @@ class AuthRepository {
     }, onSuccess: (response) async {
       debugPrint(response.body);
       result = loginResponseModelFromJson(response.body);
+      showToast(result!.message??'');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');
@@ -34,6 +35,7 @@ class AuthRepository {
     }, onSuccess: (response) async {
       debugPrint(response.body);
       result = loginResponseModelFromJson(response.body);
+      showToast(result!.message??'');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');
@@ -49,6 +51,7 @@ class AuthRepository {
           body: requestBody);
     }, onSuccess: (response) async {
       result = loginResponseModelFromJson(response.body);
+      showToast(result!.message??'');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');
@@ -66,6 +69,7 @@ class AuthRepository {
     }, onSuccess: (response) async {
       debugPrint(response.body);
       result = resetPasswordResponseModelFromJson(response.body);
+      showToast(result!.message??'');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');

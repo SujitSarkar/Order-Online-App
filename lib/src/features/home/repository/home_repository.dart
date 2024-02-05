@@ -13,6 +13,7 @@ class HomeRepository {
     }, onSuccess: (response) async {
       debugPrint(response.body);
       result = settingsDataModelFromJson(response.body);
+      showToast(result!.message??'');
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
       showToast(error.message ?? 'Something went wrong');
