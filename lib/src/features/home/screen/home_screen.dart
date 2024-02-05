@@ -322,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ClipRRect(
                                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                                 child: InkWell(
-                                  onTap: () => homeProvider.navigateToWebPage(WebEndpoint.reservationUrl),
+                                  onTap: () => homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
                                   child: Stack(
                                     children: [
                                       CachedNetworkImage(
