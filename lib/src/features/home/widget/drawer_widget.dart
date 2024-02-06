@@ -35,7 +35,7 @@ class DrawerWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * .1),
+                SizedBox(height: MediaQuery.of(context).size.height * .08),
                 InkWell(
                     onTap: () =>
                         homeProvider.popAndNavigateToWebPage('', context),
@@ -79,18 +79,41 @@ class DrawerWidget extends StatelessWidget {
                           'Login',
                           style: TextStyle(color: Colors.white, fontSize: 24),
                         ))
-                    : InkWell(
-                        onTap: () async {
-                          Scaffold.of(context).closeDrawer();
-                          await homeProvider.logoutButtonOnTap();
-                        },
-                        child: const Text(
-                          'Logout',
-                          style: TextStyle(color: Colors.white, fontSize: 24),
-                        )),
+                    : Column(
+                      children: [
+                        InkWell(
+                            onTap: () async {
+                              Scaffold.of(context).closeDrawer();
+                              await homeProvider.logoutButtonOnTap();
+                            },
+                            child: const Text(
+                              'Logout',
+                              style: TextStyle(color: Colors.white, fontSize: 24),
+                            )),
+                        const SizedBox(height: 28),
+
+                        InkWell(
+                          onTap: (){
+                            homeProvider.popAndNavigateToWebPage(
+                                WebEndpoint.profileUrl, context);
+                          },
+                          child: Container(
+                            height: 45,
+                            width: 45,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppColor.secondaryColor,
+                              borderRadius: const BorderRadius.all(Radius.circular(50)),
+                              border: Border.all(color: Colors.white,width: 1)
+                            ),
+                            child: Text(homeProvider.loginResponseModel!.data!.user!.name![0].toUpperCase(),
+                              style: const TextStyle(color: Colors.white,fontSize: 28),),
+                          ),
+                        ),
+                      ],
+                    ),
                 const SizedBox(height: 28),
-                if (homeProvider.settingsDataModel?.data!.orderStatus != null &&
-                    homeProvider.settingsDataModel?.data!.orderStatus == true)
+                if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
                   SolidButton(
                       onTap: () async {
                         if (homeProvider.settingsDataModel!.data!
@@ -111,10 +134,7 @@ class DrawerWidget extends StatelessWidget {
                             fontSize: 24, color: AppColor.primaryColor),
                       )),
                 const SizedBox(height: 28),
-                if (homeProvider.settingsDataModel?.data!.reservationStatus !=
-                        null &&
-                    homeProvider.settingsDataModel?.data!.reservationStatus ==
-                        true)
+                if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
                   SolidButton(
                       onTap: () async{
                         if (homeProvider.settingsDataModel!.data!.redirectLinkReservation!.isLinkValidate) {
