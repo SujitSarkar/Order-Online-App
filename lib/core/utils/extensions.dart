@@ -3,3 +3,9 @@ extension ExtendedString on String?{
     return this !=null && this!.length>=5;
   }
 }
+
+extension ExtendedBool on bool?{
+  bool get isEnabled {
+    return this != null && this == true;
+  }
+}

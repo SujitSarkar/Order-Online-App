@@ -4,7 +4,7 @@ import 'package:order_online_app/shared/api/api_endpoint.dart';
 import 'package:order_online_app/src/features/authentication/repository/auth_repository.dart';
 import 'package:order_online_app/src/features/home/model/settings_data_model.dart';
 import 'package:order_online_app/src/features/home/repository/home_repository.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
@@ -20,7 +20,7 @@ class HomeProvider extends ChangeNotifier {
   SettingsDataModel? settingsDataModel;
   List<String> sliderImageUrlList = [];
 
-  late VideoPlayerController videoController;
+  // late VideoPlayerController videoController;
 
   Future<void> initialize() async {
     loading = true;
@@ -107,22 +107,22 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initVideo() {
-    if(settingsDataModel?.data!.sliderVidEnable!=null && settingsDataModel?.data!.sliderVidEnable==true){
-      loadingVideo = true;
-      notifyListeners();
-      videoController = VideoPlayerController.networkUrl(
-          Uri.parse('${ApiEndpoint.imageUrlPath}/${settingsDataModel?.data!.sliderVid ?? ''}'));
-      videoController.initialize().then((value) {
-        videoController.play();
-        videoController.setLooping(true);
-        loadingVideo = false;
-        notifyListeners();
-      });
-    }
-  }
-
-  void disposeVideo() {
-    videoController.dispose();
-  }
+  // void initVideo() {
+  //   if(settingsDataModel?.data!.sliderVidEnable!=null && settingsDataModel?.data!.sliderVidEnable==true){
+  //     loadingVideo = true;
+  //     notifyListeners();
+  //     videoController = VideoPlayerController.networkUrl(
+  //         Uri.parse('${ApiEndpoint.imageUrlPath}/${settingsDataModel?.data!.sliderVid ?? ''}'));
+  //     videoController.initialize().then((value) {
+  //       videoController.play();
+  //       videoController.setLooping(true);
+  //       loadingVideo = false;
+  //       notifyListeners();
+  //     });
+  //   }
+  // }
+  //
+  // void disposeVideo() {
+  //   videoController.dispose();
+  // }
 }

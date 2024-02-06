@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:order_online_app/core/utils/app_toast.dart';
@@ -86,7 +88,10 @@ class AuthRepository {
           return await ApiService.instance
               .post('${ApiEndpoint.baseUrl}${ApiEndpoint.logout}');
         },
-        onSuccess: (response) async {},
+        onSuccess: (response) async {
+          final jsonData = jsonDecode(response.body);
+          showToast(jsonData['message']);
+        },
         onError: (error) {
           debugPrint(error.message ?? 'Error Logout');
           showToast(error.message ?? 'Error Logout');

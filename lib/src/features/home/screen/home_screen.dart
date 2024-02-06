@@ -235,8 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Column(
                             children: [
                               ///Order Online
-                              if (homeProvider.settingsDataModel?.data!.orderStatus != null &&
-                                  homeProvider.settingsDataModel?.data!.orderStatus == true)
+                              if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
                               ClipRRect(
                                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                                 child: InkWell(
@@ -272,13 +271,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               ),
-                              if (homeProvider.settingsDataModel?.data!.orderStatus != null &&
-                                  homeProvider.settingsDataModel?.data!.orderStatus == true)
+                              if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
                               const SizedBox(height: 20),
 
                               ///Reservation
-                              if (homeProvider.settingsDataModel?.data!.reservationStatus != null &&
-                                  homeProvider.settingsDataModel?.data!.reservationStatus == true)
+                              if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
                               ClipRRect(
                                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                                 child: InkWell(
@@ -314,8 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               ),
-                              if (homeProvider.settingsDataModel?.data!.reservationStatus != null &&
-                                  homeProvider.settingsDataModel?.data!.reservationStatus == true)
+                              if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
                               const SizedBox(height: 20),
 
                               ///Offers
@@ -351,8 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 20),
 
                               ///Loyalty Point
-                              if (homeProvider.settingsDataModel?.data!.pointsEnabled != null &&
-                                  homeProvider.settingsDataModel?.data!.pointsEnabled == true)
+                              if (homeProvider.settingsDataModel!.data!.pointsEnabled.isEnabled)
                               ClipRRect(
                                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                                 child: InkWell(
@@ -382,8 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               ),
-                              if (homeProvider.settingsDataModel?.data!.pointsEnabled != null &&
-                                  homeProvider.settingsDataModel?.data!.pointsEnabled == true)
+                              if (homeProvider.settingsDataModel!.data!.pointsEnabled.isEnabled)
                               const SizedBox(height: 20),
 
                               ///My Orders
