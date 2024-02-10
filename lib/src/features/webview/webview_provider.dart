@@ -57,16 +57,18 @@ class WebViewProvider extends ChangeNotifier {
     final loginResponseFromLocal = await getData(LocalStorageKey.loginResponseKey);
     if (loginResponseFromLocal != null) {
       loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
+      await setAccessTokenToWebViewCache();
     }
   }
 
   Future<void> setAccessTokenToWebViewCache()async{
+    debugPrint('Login Model: ${loginResponseModel?.data?.accessToken}');
     if(loginResponseModel!=null){
       await webViewController?.evaluateJavascript(
-        source: "localStorage.setItem('access_token', '${loginResponseModel?.data?.accessToken}');",
+        source: "localStorage.setItem('accessToken', '${loginResponseModel?.data?.accessToken}');",
       );
       await webViewController?.evaluateJavascript(
-        source: "localStorage.getItem('access_token')",
+        source: "localStorage.getItem('accessToken')",
       ).then((result) {
         debugPrint("\n\nRetrieved access token:::::::::: $result\n\n");
       });

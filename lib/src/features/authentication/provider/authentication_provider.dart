@@ -13,12 +13,12 @@ import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/app_toast.dart';
 import '../../../../core/utils/local_storage.dart';
 import '../../../../core/utils/validator.dart';
+import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../model/login_response_model.dart';
 import '../repository/auth_repository.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
-  final AuthRepository _authRepository = AuthRepository();
   bool loading = false;
   bool googleLoading = false;
   bool facebookLoading = false;
@@ -97,29 +97,33 @@ class AuthenticationProvider extends ChangeNotifier {
     };
     debugPrint(requestBody.toString());
 
-    await _authRepository
-        .signup(requestBody: requestBody)
-        .then((response) async {
-      loading = false;
-      notifyListeners();
-      if (response != null) {
-        await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response)).then((value) async {
-          final BuildContext context = AppNavigatorKey.key.currentState!.context;
-          final HomeProvider homeProvider = Provider.of(context,listen: false);
-          homeProvider.initialize();
-          ApiService.instance.addAccessToken(response.data?.accessToken);
-          clearAllData();
-          if(fromPage==AppString.fromPageList.last){
-            final WebViewProvider webViewProvider = Provider.of(context,listen: false);
-            webViewProvider.getLocalData();
-            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
-          }else{
-           Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
-          }
-        }, onError: (error) {
-          showToast(error.toString());
-        });
-      }
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.signup}',
+          body: requestBody,fromJson: LoginResponseModel.fromJson);
+    }, onSuccess: (result) async {
+      final LoginResponseModel response = result as LoginResponseModel;
+      await setData(LocalStorageKey.loginResponseKey, loginResponseModelToJson(response)).then((value) async {
+        final BuildContext context = AppNavigatorKey.key.currentState!.context;
+        final HomeProvider homeProvider = Provider.of(context,listen: false);
+        homeProvider.initialize();
+        ApiService.instance.addAccessToken(response.data?.accessToken);
+        clearAllData();
+        if(fromPage==AppString.fromPageList.last){
+          final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+          webViewProvider.getLocalData();
+          Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+        }else{
+          Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
+        }
+      }, onError: (error) {
+        showToast(error.toString());
+      });
+    }, onError: (error) {
+      ApiException apiException = error as ApiException;
+      debugPrint('Message: ${apiException.message}');
+      debugPrint('Errors: ${apiException.errors}');
+      showToast(apiException.message);
     });
   }
 
@@ -133,8 +137,6 @@ class AuthenticationProvider extends ChangeNotifier {
       showToast('Invalid email address');
       return;
     }
-    loading = true;
-    notifyListeners();
 
     Map<String, dynamic> requestBody = {
       "email": emailController.text.trim(),
@@ -142,28 +144,37 @@ class AuthenticationProvider extends ChangeNotifier {
       "device_name": "Dev1@CF",
       "remember": 'false'
     };
+    loading = true;
+    notifyListeners();
 
-    await _authRepository.signIn(requestBody: requestBody).then(
-        (LoginResponseModel? response) async {
-      if (response != null) {
-        await setData(LocalStorageKey.loginResponseKey,
-            loginResponseModelToJson(response)).then((value) async {
-          final BuildContext context = AppNavigatorKey.key.currentState!.context;
-          ApiService.instance.addAccessToken(response.data?.accessToken);
-          final HomeProvider homeProvider = Provider.of(context,listen: false);
-          homeProvider.initialize();
-          clearAllData();
-          if(fromPage==AppString.fromPageList.last){
-            final WebViewProvider webViewProvider = Provider.of(context,listen: false);
-            webViewProvider.getLocalData();
-            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
-          }else{
-            Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
-          }
-        }, onError: (error) {
-          showToast(error.toString());
-        });
-      }
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.signIn}',
+          body: requestBody,fromJson: LoginResponseModel.fromJson);
+    }, onSuccess: (result) async {
+      final LoginResponseModel response = result as LoginResponseModel;
+      await setData(LocalStorageKey.loginResponseKey,
+          loginResponseModelToJson(response)).then((value) async {
+        final BuildContext context = AppNavigatorKey.key.currentState!.context;
+        ApiService.instance.addAccessToken(response.data?.accessToken);
+        final HomeProvider homeProvider = Provider.of(context,listen: false);
+        homeProvider.initialize();
+        clearAllData();
+        if(fromPage==AppString.fromPageList.last){
+          final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+          webViewProvider.getLocalData();
+          Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+        }else{
+          Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
+        }
+      }, onError: (error) {
+        showToast(error.toString());
+      });
+    }, onError: (error) {
+      ApiException apiException = error as ApiException;
+      debugPrint('Message: ${apiException.message}');
+      debugPrint('Errors: ${apiException.errors}');
+      showToast(apiException.message);
     });
     loading = false;
     notifyListeners();
@@ -196,27 +207,34 @@ class AuthenticationProvider extends ChangeNotifier {
           "device_name": "Dev1@CF",
         };
 
-        await _authRepository.socialLogin(requestBody: requestBody).then(
-            (LoginResponseModel? response) async {
-          if (response != null) {
-            await setData(LocalStorageKey.loginResponseKey,
-                    loginResponseModelToJson(response)).then((value) async {
-              final BuildContext context = AppNavigatorKey.key.currentState!.context;
-              ApiService.instance.addAccessToken(response.data?.accessToken);
-              final HomeProvider homeProvider = Provider.of(context,listen: false);
-              homeProvider.initialize();
-              clearAllData();
-              if(fromPage==AppString.fromPageList.last){
-                final WebViewProvider webViewProvider = Provider.of(context,listen: false);
-                webViewProvider.getLocalData();
-                Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
-              }else{
-                Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
-              }
-            }, onError: (error) {
-              showToast(error.toString());
-            });
-          }
+        await ApiService.instance.apiCall(execute: () async {
+          return await ApiService.instance.post(
+              '${ApiEndpoint.baseUrl}${ApiEndpoint.socialLogin}',
+              body: requestBody,fromJson: LoginResponseModel.fromJson);
+        }, onSuccess: (result) async {
+          LoginResponseModel response = result as LoginResponseModel;
+          await setData(LocalStorageKey.loginResponseKey,
+              loginResponseModelToJson(response)).then((value) async {
+            final BuildContext context = AppNavigatorKey.key.currentState!.context;
+            ApiService.instance.addAccessToken(response.data?.accessToken);
+            final HomeProvider homeProvider = Provider.of(context,listen: false);
+            homeProvider.initialize();
+            clearAllData();
+            if(fromPage==AppString.fromPageList.last){
+              final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+              webViewProvider.getLocalData();
+              Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+            }else{
+              Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
+            }
+          }, onError: (error) {
+            showToast(error.toString());
+          });
+        }, onError: (error) {
+          ApiException apiException = error as ApiException;
+          debugPrint('Message: ${apiException.message}');
+          debugPrint('Errors: ${apiException.errors}');
+          showToast(apiException.message);
         });
       } else {
         showToast('User data not found');
@@ -260,28 +278,36 @@ class AuthenticationProvider extends ChangeNotifier {
             "device_name": "Dev1@CF",
           };
 
-          await _authRepository.socialLogin(requestBody: requestBody).then(
-                  (LoginResponseModel? response) async {
-                if (response != null) {
-                  await setData(LocalStorageKey.loginResponseKey,
-                      loginResponseModelToJson(response)).then((value) async {
-                    final BuildContext context = AppNavigatorKey.key.currentState!.context;
-                    ApiService.instance.addAccessToken(response.data?.accessToken);
-                    final HomeProvider homeProvider = Provider.of(context,listen: false);
-                    homeProvider.initialize();
-                    clearAllData();
-                    if(fromPage==AppString.fromPageList.last){
-                      final WebViewProvider webViewProvider = Provider.of(context,listen: false);
-                      webViewProvider.getLocalData();
-                      Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
-                    }else{
-                      Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
-                    }
-                  }, onError: (error) {
-                    showToast(error.toString());
-                  });
-                }
-              });
+          await ApiService.instance.apiCall(execute: () async {
+            return await ApiService.instance.post(
+                '${ApiEndpoint.baseUrl}${ApiEndpoint.socialLogin}',
+                body: requestBody,fromJson: LoginResponseModel.fromJson);
+          }, onSuccess: (result) async {
+            LoginResponseModel response = result as LoginResponseModel;
+            await setData(LocalStorageKey.loginResponseKey,
+                loginResponseModelToJson(response)).then((value) async {
+              final BuildContext context = AppNavigatorKey.key.currentState!.context;
+              ApiService.instance.addAccessToken(response.data?.accessToken);
+              final HomeProvider homeProvider = Provider.of(context,listen: false);
+              homeProvider.initialize();
+              clearAllData();
+              if(fromPage==AppString.fromPageList.last){
+                final WebViewProvider webViewProvider = Provider.of(context,listen: false);
+                webViewProvider.getLocalData();
+                Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.webViewPage);
+              }else{
+                Navigator.of(context).popUntil((route) => route.settings.name == AppRouter.home);
+              }
+            }, onError: (error) {
+              showToast(error.toString());
+            });
+          }, onError: (error) {
+            ApiException apiException = error as ApiException;
+            debugPrint('Message: ${apiException.message}');
+            debugPrint('Errors: ${apiException.errors}');
+            showToast(apiException.message);
+          });
+
         }else if(result.status == LoginStatus.cancelled){
           showToast('Facebook login canceled');
         }else if(result.status == LoginStatus.failed){
@@ -311,15 +337,22 @@ class AuthenticationProvider extends ChangeNotifier {
 
     Map<String, dynamic> requestBody = {"email": emailController.text.trim()};
 
-    await _authRepository.resetPassword(requestBody: requestBody).then(
-        (ResetPasswordResponseModel? response) async {
-      if (response != null && response.status == true) {
-        Navigator.pop(AppNavigatorKey.key.currentState!.context);
-      }
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.forgetPassword}',
+          body: requestBody,fromJson: ResetPasswordResponseModel.fromJson);
+    }, onSuccess: (result) async {
+      ResetPasswordResponseModel response = result as ResetPasswordResponseModel;
+      showToast(response.message ?? '');
+      Navigator.pop(AppNavigatorKey.key.currentState!.context);
     }, onError: (error) {
-      showToast(error.toString());
+      ApiException apiException = error as ApiException;
+      debugPrint('Message: ${apiException.message}');
+      debugPrint('Errors: ${apiException.errors}');
+      showToast(apiException.message);
     });
     loading = false;
     notifyListeners();
   }
+
 }

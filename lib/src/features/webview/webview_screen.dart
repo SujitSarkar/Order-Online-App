@@ -98,7 +98,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   onLoadResource: (controller, resource) async {
                     debugPrint('::::::::::::::onLoadResource:::::::::::::::::');
                     debugPrint('::::::::::::::${resource.url}:::::::::::::::::');
-                    await webViewProvider.setAccessTokenToWebViewCache();
+                    // await webViewProvider.setAccessTokenToWebViewCache();
                   },
                 ),
               )

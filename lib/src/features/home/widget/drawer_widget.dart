@@ -27,7 +27,7 @@ class DrawerWidget extends StatelessWidget {
               alignment: Alignment.topRight,
               child: IconButton(
                 onPressed: () => Scaffold.of(context).closeDrawer(),
-                icon: const Icon(Icons.cancel_outlined,
+                icon: const Icon(Icons.close,
                     color: Colors.white, size: 30),
               ),
             ),

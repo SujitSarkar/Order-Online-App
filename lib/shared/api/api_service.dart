@@ -52,45 +52,57 @@ class ApiService {
   }
 
   ///get api request
-  Future<dynamic> get(String url) async {
+  Future<T> get<T>(String url, {required T Function(Map<String, dynamic> json) fromJson}) async {
     http.Response response = await http.get(Uri.parse(url), headers: headers);
-    return _processResponse(response);
+    return _processResponse(response, fromJson);
   }
 
   ///post api request
-  Future<dynamic> post(String url, {dynamic body}) async {
+  Future<T> post<T>(String url, {required T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic>? body}) async {
     http.Response response = await http.post(Uri.parse(url),
         headers: headers, body: body != null ? jsonEncode(body) : null);
-    return _processResponse(response);
+    return _processResponse(response, fromJson);
   }
 
   ///patch api request
-  Future<dynamic> patch(String url, {dynamic body}) async {
+  Future<T> patch<T>(String url, {required T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic>? body}) async {
     http.Response response = await http.patch(Uri.parse(url),
         headers: headers, body: body != null ? jsonEncode(body) : null);
-    return _processResponse(response);
+    return _processResponse(response, fromJson);
   }
 
   ///delete api request
-  Future<dynamic> delete(String url) async {
+  Future<T> delete<T>(String url,{required T Function(Map<String, dynamic> json) fromJson}) async {
     http.Response response =
-        await http.delete(Uri.parse(url), headers: headers);
-    return _processResponse(response);
+    await http.delete(Uri.parse(url), headers: headers);
+    return _processResponse(response, fromJson);
   }
 
   ///check if the response is valid (everything went fine) / else throw error
-  dynamic _processResponse(var response) {
+  T _processResponse<T>(var response, T Function(Map<String, dynamic> json) fromJson) {
     debugPrint('url:- ${response.request?.url}');
     debugPrint('statusCode:- ${response.statusCode}');
     debugPrint('AccessToken:- ${headers['Authorization']}');
     debugPrint('response:- ${response.body}');
 
-    if (response.statusCode == 200 ||
-        response.statusCode == 201 ||
-        response.statusCode == 204) {
-      return response;
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final dynamic jsonData = jsonDecode(response.body);
+      if (jsonData is Map<String, dynamic>) {
+        return fromJson(jsonData);
+      } else {
+        var jsonData = jsonDecode(response.body);
+        throw ApiException(message: jsonData['message'], errors: jsonData['errors']);
+      }
     } else {
-      throw Exception(jsonDecode(response.body)['message']);
+      var jsonData = jsonDecode(response.body);
+      throw ApiException(message: jsonData['message'], errors: jsonData['errors']);
     }
   }
+}
+
+class ApiException implements Exception {
+  final String message;
+  final Map<String,dynamic>? errors;
+
+  ApiException({required this.message, this.errors});
 }

@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:order_online_app/core/constants/app_string.dart';
 import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 import 'package:provider/provider.dart';
-import '../../../core/constants/app_color.dart';
 import '../../../core/router/app_router.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -31,11 +29,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        backgroundColor: AppColor.primaryColor,
+    return Scaffold(
+        backgroundColor: Colors.transparent,
         body: Center(
-            child: Text(AppString.appName,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 40,fontWeight: FontWeight.bold))));
+          child: Image.asset('assets/images/logo512.png',height:200,width:200)),
+            // child: Text(AppString.appName,
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(color: Colors.white, fontSize: 40,fontWeight: FontWeight.bold))),
+    );
   }
 }

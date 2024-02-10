@@ -77,348 +77,280 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: homeProvider.loading
             ? const Center(child: LoadingWidget())
-            : RefreshIndicator(
-                backgroundColor: Colors.white,
-                onRefresh: () async => await homeProvider.onRefresh(),
-                child: Column(
-                  children: [
-                    ///Header
-                    if(homeProvider.loginResponseModel?.data?.accessToken==null)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16,top: 12,right: 16),
-                      child: Row(
+            : Column(
+              children: [
+                ///Header
+                if(homeProvider.loginResponseModel?.data?.accessToken==null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 16,top: 12,right: 16),
+                  child: Row(
+                    children: [
+                      const Expanded(child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Welcome to',style: TextStyle(fontSize: TextSize.titleText,fontWeight: FontWeight.w100),),
-                              Text(AppString.appName,style: TextStyle(fontSize: TextSize.largeTitleText,fontWeight: FontWeight.w500),),
-                            ],
-                          )),
-                          SolidButton(
-                            width: 100,
-                            onTap: (){
-                              Navigator.pushNamed(context, AppRouter.signIn,arguments: AppString.fromPageList.first);
-                            },
-                              child: const Text('Login',style: TextStyle(color: Colors.white,fontSize: TextSize.buttonText)))
+                          Text('Welcome to',style: TextStyle(fontSize: TextSize.titleText,fontWeight: FontWeight.w100),),
+                          Text(AppString.appName,style: TextStyle(fontSize: TextSize.largeTitleText,fontWeight: FontWeight.w500),),
                         ],
-                      ),
-                    ),
-                    if(homeProvider.loginResponseModel?.data?.accessToken==null)
-                    const Divider(thickness: 0.5),
-                    SizedBox(height: homeProvider.loginResponseModel?.data?.accessToken==null?10:16),
-
-                    Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              // homeProvider.settingsDataModel?.data!.sliderVidEnable !=
-                              //             null && homeProvider.settingsDataModel?.data!.sliderVidEnable == true
-                              //     ? SizedBox(
-                              //         height: size.height * .35,
-                              //         child: VideoWidget(
-                              //             videoUrl: homeProvider.settingsDataModel
-                              //                     ?.data!.sliderVid ?? ''))
-                              //     :
-                              InkWell(
-                                onTap: () => homeProvider.navigateToWebPage(''),
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.all(Radius.circular(12)),
-                                  child: CarouselSlider(
-                                          options: CarouselOptions(
-                                            height: size.height * .25,
-                                            autoPlay: true,
-                                            scrollDirection: Axis.horizontal,
-                                            viewportFraction: 1,
-                                          ),
-                                          items: homeProvider.sliderImageUrlList
-                                              .map((mediaUrl) {
-                                            return Builder(
-                                              builder: (BuildContext context) {
-                                                return Container(
-                                                  width: double.infinity,
-                                                  height: size.height * .25,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey.shade300,
-                                                  ),
-                                                  child: CachedNetworkImage(
-                                                      imageUrl: mediaUrl,
-                                                      width: double.infinity,
-                                                      height: size.height * .25,
-                                                      fit: BoxFit.cover,
-                                                      placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
-                                                      errorWidget: (context, url,error) => CardPlaceholderWidget(height: size.height * .25),),
-                                                );
-                                              },
-                                            );
-                                          }).toList(),
-                                        ),
-                                ),
-                              ),
-                              // Column(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   crossAxisAlignment: CrossAxisAlignment.center,
-                              //   children: [
-                              //     const Text('Welcome to',
-                              //         style: TextStyle(
-                              //             fontSize: 20,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.white)),
-                              //     const Text(AppString.appName,
-                              //         style: TextStyle(
-                              //             fontSize: 32,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.white)),
-                              //     const Text('Best Quality And Tasty Food',
-                              //         style: TextStyle(
-                              //             fontSize: 20,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.white)),
-                              //     const SizedBox(height: 12),
-                              //     Padding(
-                              //       padding:
-                              //           const EdgeInsets.symmetric(horizontal: 16),
-                              //       child: Row(
-                              //         mainAxisAlignment:
-                              //             MainAxisAlignment.spaceAround,
-                              //         children: [
-                              //           if (homeProvider.settingsDataModel?.data!
-                              //                       .orderStatus !=
-                              //                   null &&
-                              //               homeProvider.settingsDataModel?.data!
-                              //                       .orderStatus ==
-                              //                   true)
-                              //             Expanded(
-                              //               child: SolidButton(
-                              //                   onTap: () =>
-                              //                       homeProvider.navigateToWebPage(
-                              //                           WebEndpoint.orderUrl),
-                              //                   child: const Text('Order Online',
-                              //                       style: TextStyle(
-                              //                           color: Colors.white,
-                              //                           fontSize: TextSize.buttonText,
-                              //                           fontWeight:
-                              //                               FontWeight.bold))),
-                              //             ),
-                              //           const SizedBox(width: 12),
-                              //           if (homeProvider.settingsDataModel?.data!
-                              //                       .reservationStatus !=
-                              //                   null &&
-                              //               homeProvider.settingsDataModel?.data!
-                              //                       .reservationStatus ==
-                              //                   true)
-                              //             Expanded(
-                              //               child: OutlineButton(
-                              //                 onTap: () =>
-                              //                     homeProvider.navigateToWebPage(
-                              //                         WebEndpoint.reservationUrl),
-                              //                 child: const Text('Book A Table',
-                              //                     style: TextStyle(
-                              //                         color: Colors.white,
-                              //                         fontSize: TextSize.buttonText,
-                              //                         fontWeight: FontWeight.bold)),
-                              //               ),
-                              //               //             fontWeight: FontWeight.bold))),
-                              //             )
-                              //         ],
-                              //       ),
-                              //     )
-                              //   ],
-                              // )
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          if(homeProvider.settingsDataModel!=null)
-                          Column(
-                            children: [
-                              ///Order Online
-                              if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                child: InkWell(
-                                  onTap: ()async{
-                                    if(homeProvider.settingsDataModel!.data!.redirectLinkOrder!.isLinkValidate){
-                                      await openUrlOnExternal(homeProvider.settingsDataModel!.data!.redirectLinkOrder!);
-                                    }else{
-                                      homeProvider.navigateToWebPage(WebEndpoint.orderUrl);
-                                    }
-                                  },
-                                  child: Stack(
-                                    children: [
-                                      CachedNetworkImage(
-                                        imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgOrder!}',
-                                        width: double.infinity,
-                                        height: size.height * .25,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
-                                        errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
-                                      MaskWidget(
-                                        height: size.height * .25,
-                                        child: const Text(
-                                          'Order Online',
-                                          textAlign: TextAlign.end,
-                                          style: TextStyle(
-                                              height: 1,
-                                              color: Colors.white,
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
-                              const SizedBox(height: 20),
-
-                              ///Reservation
-                              if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                child: InkWell(
-                                  onTap: ()async{
-                                    if(homeProvider.settingsDataModel!.data!.redirectLinkReservation!.isLinkValidate){
-                                      await openUrlOnExternal(homeProvider.settingsDataModel!.data!.redirectLinkReservation!);
-                                    }else{
-                                      homeProvider.navigateToWebPage(WebEndpoint.reservationUrl);
-                                    }
-                                  },
-                                  child: Stack(
-                                    children: [
-                                      CachedNetworkImage(
-                                        imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgReservation!}',
-                                        width: double.infinity,
-                                        height: size.height * .25,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
-                                        errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
-                                      MaskWidget(
-                                        height: size.height * .25,
-                                        child: const Text(
-                                          'Reservation',
-                                          textAlign: TextAlign.end,
-                                          style: TextStyle(
-                                              height: 1,
-                                              color: Colors.white,
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
-                              const SizedBox(height: 20),
-
-                              ///Offers
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                child: InkWell(
-                                  onTap: () => homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
-                                  child: Stack(
-                                    children: [
-                                      CachedNetworkImage(
-                                        imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgOffer!}',
-                                        width: double.infinity,
-                                        height: size.height * .25,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
-                                        errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
-                                      MaskWidget(
-                                        height: size.height * .25,
-                                        child: const Text(
-                                          'Offer',
-                                          textAlign: TextAlign.end,
-                                          style: TextStyle(
-                                              height: 1,
-                                              color: Colors.white,
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-
-                              ///Loyalty Point
-                              if (homeProvider.settingsDataModel!.data!.pointsEnabled.isEnabled)
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                child: InkWell(
-                                  onTap: () => homeProvider.navigateToWebPage(WebEndpoint.profileUrl),
-                                  child: Stack(
-                                    children: [
-                                      CachedNetworkImage(
-                                        imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgPoints!}',
-                                        width: double.infinity,
-                                        height: size.height * .25,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
-                                        errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
-                                      MaskWidget(
-                                        height: size.height * .25,
-                                        child: const Text(
-                                          'Loyalty Point',
-                                          textAlign: TextAlign.end,
-                                          style: TextStyle(
-                                              height: 1,
-                                              color: Colors.white,
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              if (homeProvider.settingsDataModel!.data!.pointsEnabled.isEnabled)
-                              const SizedBox(height: 20),
-
-                              ///My Orders
-                              ClipRRect(
-                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                  child: InkWell(
-                                    onTap: () => homeProvider.navigateToWebPage(WebEndpoint.orderHistoryUrl),
-                                    child: Stack(
-                                      children: [
-                                        CachedNetworkImage(
-                                          imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgMyOrder!}',
-                                          width: double.infinity,
-                                          height: size.height * .25,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
-                                          errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
-                                        MaskWidget(
-                                          height: size.height * .25,
-                                          child: const Text(
-                                            'My Orders',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                height: 1,
-                                                color: Colors.white,
-                                                fontSize: 32,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                      )),
+                      SolidButton(
+                        width: 100,
+                        onTap: (){
+                          Navigator.pushNamed(context, AppRouter.signIn,arguments: AppString.fromPageList.first);
+                        },
+                          child: const Text('Login',style: TextStyle(color: Colors.white,fontSize: TextSize.buttonText)))
+                    ],
+                  ),
                 ),
-              ),
+                if(homeProvider.loginResponseModel?.data?.accessToken==null)
+                const Divider(thickness: 0.5),
+                SizedBox(height: homeProvider.loginResponseModel?.data?.accessToken==null?10:16),
+
+                Expanded(
+                  child: RefreshIndicator(
+                    backgroundColor: Colors.white,
+                    onRefresh: () async => await homeProvider.onRefresh(),
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // homeProvider.settingsDataModel?.data!.sliderVidEnable !=
+                            //             null && homeProvider.settingsDataModel?.data!.sliderVidEnable == true
+                            //     ? SizedBox(
+                            //         height: size.height * .35,
+                            //         child: VideoWidget(
+                            //             videoUrl: homeProvider.settingsDataModel
+                            //                     ?.data!.sliderVid ?? ''))
+                            //     :
+                            ///Slider
+                            InkWell(
+                              onTap: () => homeProvider.navigateToWebPage(''),
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                child: CarouselSlider(
+                                        options: CarouselOptions(
+                                          height: size.height * .25,
+                                          autoPlay: true,
+                                          scrollDirection: Axis.horizontal,
+                                          viewportFraction: 1,
+                                        ),
+                                        items: homeProvider.sliderImageUrlList
+                                            .map((mediaUrl) {
+                                          return Builder(
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                width: double.infinity,
+                                                height: size.height * .25,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                                child: CachedNetworkImage(
+                                                    imageUrl: mediaUrl,
+                                                    width: double.infinity,
+                                                    height: size.height * .25,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
+                                                    errorWidget: (context, url,error) => CardPlaceholderWidget(height: size.height * .25),),
+                                              );
+                                            },
+                                          );
+                                        }).toList(),
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        if(homeProvider.settingsDataModel!=null)
+                        Column(
+                          children: [
+                            ///Order Online
+                            if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
+                            ClipRRect(
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              child: InkWell(
+                                onTap: ()async{
+                                  if(homeProvider.settingsDataModel!.data!.redirectLinkOrder!.isLinkValidate){
+                                    await openUrlOnExternal(homeProvider.settingsDataModel!.data!.redirectLinkOrder!);
+                                  }else{
+                                    homeProvider.navigateToWebPage(WebEndpoint.orderUrl);
+                                  }
+                                },
+                                child: Stack(
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgOrder!}',
+                                      width: double.infinity,
+                                      height: size.height * .25,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
+                                      errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
+                                    MaskWidget(
+                                      height: size.height * .25,
+                                      child: const Text(
+                                        'ORDER ONLINE',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
+                            const SizedBox(height: 20),
+
+                            ///Reservation
+                            if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
+                            ClipRRect(
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              child: InkWell(
+                                onTap: ()async{
+                                  if(homeProvider.settingsDataModel!.data!.redirectLinkReservation!.isLinkValidate){
+                                    await openUrlOnExternal(homeProvider.settingsDataModel!.data!.redirectLinkReservation!);
+                                  }else{
+                                    homeProvider.navigateToWebPage(WebEndpoint.reservationUrl);
+                                  }
+                                },
+                                child: Stack(
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgReservation!}',
+                                      width: double.infinity,
+                                      height: size.height * .25,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
+                                      errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
+                                    MaskWidget(
+                                      height: size.height * .25,
+                                      child: const Text(
+                                        'RESERVATION',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
+                            const SizedBox(height: 20),
+
+                            ///Offers
+                            ClipRRect(
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              child: InkWell(
+                                onTap: () => homeProvider.navigateToWebPage(WebEndpoint.orderUrl),
+                                child: Stack(
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgOffer!}',
+                                      width: double.infinity,
+                                      height: size.height * .25,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
+                                      errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
+                                    MaskWidget(
+                                      height: size.height * .25,
+                                      child: const Text(
+                                        'OFFERS',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+
+                            ///Loyalty Point
+                            if (homeProvider.settingsDataModel!.data!.pointsEnabled.isEnabled)
+                            ClipRRect(
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              child: InkWell(
+                                onTap: () => homeProvider.navigateToWebPage(WebEndpoint.profileUrl),
+                                child: Stack(
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgPoints!}',
+                                      width: double.infinity,
+                                      height: size.height * .25,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
+                                      errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
+                                    MaskWidget(
+                                      height: size.height * .25,
+                                      child: const Text(
+                                        'LOYALTY POINT',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            if (homeProvider.settingsDataModel!.data!.pointsEnabled.isEnabled)
+                            const SizedBox(height: 20),
+
+                            ///My Orders
+                            ClipRRect(
+                                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                child: InkWell(
+                                  onTap: () => homeProvider.navigateToWebPage(WebEndpoint.orderHistoryUrl),
+                                  child: Stack(
+                                    children: [
+                                      CachedNetworkImage(
+                                        imageUrl: '${ApiEndpoint.imageUrlPath}/${homeProvider.settingsDataModel!.data!.cardImgMyOrder!}',
+                                        width: double.infinity,
+                                        height: size.height * .25,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) => CardPlaceholderWidget(height: size.height * .25),
+                                        errorWidget: (context, url, error) => CardPlaceholderWidget(height: size.height * .25),),
+                                      MaskWidget(
+                                        height: size.height * .25,
+                                        child: const Text(
+                                          'MY ORDER',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              height: 1,
+                                              color: Colors.white,
+                                              fontSize: 32,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
         bottomNavigationBar: Container(
           color: AppColor.secondaryColor,
           height: 60,

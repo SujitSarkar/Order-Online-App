@@ -4,7 +4,7 @@ import '../constants/app_color.dart';
 
 class TextFormFieldWidget extends StatefulWidget {
   const TextFormFieldWidget(
-      {Key? key,
+      {super.key,
       required this.controller,
       required this.labelText,
       required this.hintText,
@@ -26,8 +26,7 @@ class TextFormFieldWidget extends StatefulWidget {
       this.onChanged,
       this.onEditingComplete,
       this.contentPadding,
-      this.focusNode})
-      : super(key: key);
+      this.focusNode});
 
   final TextEditingController controller;
   final String labelText;
