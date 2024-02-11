@@ -40,32 +40,32 @@ class DrawerWidget extends StatelessWidget {
                     onTap: () =>
                         homeProvider.popAndNavigateToWebPage('', context),
                     child: const Text(
-                      'Home',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
+                      'HOME',
+                      style: TextStyle(color: Colors.white, fontSize: 22),
                     )),
                 const SizedBox(height: 28),
                 InkWell(
                     onTap: () => homeProvider.popAndNavigateToWebPage(
                         WebEndpoint.awards, context),
                     child: const Text(
-                      'Awards',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
+                      'AWARDS',
+                      style: TextStyle(color: Colors.white, fontSize: 22),
                     )),
                 const SizedBox(height: 28),
                 InkWell(
                     onTap: () => homeProvider.popAndNavigateToWebPage(
                         WebEndpoint.gallery, context),
                     child: const Text(
-                      'Gallery',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
+                      'GALLERY',
+                      style: TextStyle(color: Colors.white, fontSize: 22),
                     )),
                 const SizedBox(height: 28),
                 InkWell(
                     onTap: () => homeProvider.popAndNavigateToWebPage(
                         WebEndpoint.contact, context),
                     child: const Text(
-                      'Contact',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
+                      'CONTACT',
+                      style: TextStyle(color: Colors.white, fontSize: 22),
                     )),
                 const SizedBox(height: 28),
                 homeProvider.loginResponseModel?.data?.accessToken == null
@@ -76,8 +76,8 @@ class DrawerWidget extends StatelessWidget {
                               arguments: AppString.fromPageList.first);
                         },
                         child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 24),
+                          'LOGIN',
+                          style: TextStyle(color: Colors.white, fontSize: 22),
                         ))
                     : Column(
                       children: [
@@ -87,8 +87,8 @@ class DrawerWidget extends StatelessWidget {
                               await homeProvider.logoutButtonOnTap();
                             },
                             child: const Text(
-                              'Logout',
-                              style: TextStyle(color: Colors.white, fontSize: 24),
+                              'LOGOUT',
+                              style: TextStyle(color: Colors.white, fontSize: 22),
                             )),
                         const SizedBox(height: 28),
 
@@ -131,7 +131,7 @@ class DrawerWidget extends StatelessWidget {
                       child: const Text(
                         'Order Online',
                         style: TextStyle(
-                            fontSize: 24, color: AppColor.primaryColor),
+                            fontSize: 22, color: AppColor.primaryColor),
                       )),
                 const SizedBox(height: 28),
                 if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
@@ -149,7 +149,7 @@ class DrawerWidget extends StatelessWidget {
                       child: const Text(
                         'Reservation',
                         style: TextStyle(
-                            fontSize: 24, color: AppColor.primaryColor),
+                            fontSize: 22, color: AppColor.primaryColor),
                       )),
               ],
             ),

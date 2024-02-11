@@ -18,8 +18,7 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final AuthenticationProvider authProvider = Provider.of(context);
-    return SafeArea(
+    return Consumer<AuthenticationProvider>(builder: (context, authProvider, child)=>SafeArea(
       child: Scaffold(
         backgroundColor: AppColor.cardColor,
         body: SingleChildScrollView(
@@ -64,6 +63,7 @@ class SignupScreen extends StatelessWidget {
                   hintText: 'Enter your email',
                   required: true,
                   textInputType: TextInputType.emailAddress,
+                  validationErrorMessage: authProvider.emailError,
                 ),
                 const SizedBox(height: 20),
                 TextFormFieldWidget(
@@ -72,6 +72,7 @@ class SignupScreen extends StatelessWidget {
                   hintText: 'Enter your phone number',
                   required: true,
                   textInputType: TextInputType.phone,
+                  validationErrorMessage: authProvider.phoneError,
                 ),
                 const SizedBox(height: 20),
                 TextFormFieldWidget(
@@ -80,6 +81,7 @@ class SignupScreen extends StatelessWidget {
                   labelText: 'Password',
                   hintText: 'Enter your password',
                   required: true,
+                  validationErrorMessage: authProvider.passwordError,
                 ),
                 const SizedBox(height: 20),
                 TextFormFieldWidget(
@@ -88,6 +90,7 @@ class SignupScreen extends StatelessWidget {
                   labelText: 'Confirm Password',
                   hintText: 'Enter your confirm password',
                   required: true,
+                  validationErrorMessage: authProvider.confirmPasswordError,
                 ),
 
                 ///Privacy Policy
@@ -109,26 +112,26 @@ class SignupScreen extends StatelessWidget {
                             TextSpan(
                               text: 'privacy policy',
                               style:
-                                  const TextStyle(color: AppColor.primaryColor),
+                              const TextStyle(color: AppColor.primaryColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
                                   Navigator.pushNamed(
                                       context, AppRouter.privacyTerms,
                                       arguments:
-                                          '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
+                                      '${WebEndpoint.baseUrl}${WebEndpoint.privacyPolicyUrl}');
                                 },
                             ),
                             const TextSpan(text: ' & '),
                             TextSpan(
                               text: 'terms',
                               style:
-                                  const TextStyle(color: AppColor.primaryColor),
+                              const TextStyle(color: AppColor.primaryColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
                                   Navigator.pushNamed(
                                       context, AppRouter.privacyTerms,
                                       arguments:
-                                          '${WebEndpoint.baseUrl}${WebEndpoint.termsAndConditionUrl}');
+                                      '${WebEndpoint.baseUrl}${WebEndpoint.termsAndConditionUrl}');
                                 },
                             ),
                           ],
@@ -145,9 +148,7 @@ class SignupScreen extends StatelessWidget {
                     Expanded(
                       flex: 1,
                       child:  SolidButton(
-                          onTap: () async {
-                            Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home);
-                          },
+                          onTap: () async => Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home),
                           backgroundColor: AppColor.disableColor,
                           child: const Text(
                             'HOME',
@@ -161,18 +162,16 @@ class SignupScreen extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: SolidButton(
-                          onTap: () async {
-                            await authProvider.signupButtonOnTap(fromPage);
-                          },
+                          onTap: () async => await authProvider.signupButtonOnTap(fromPage),
                           child: authProvider.loading
                               ? const LoadingWidget(color: Colors.white)
                               : const Text(
-                                  'SIGN UP',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: TextSize.buttonText,
-                                      fontWeight: FontWeight.bold),
-                                )),
+                            'SIGN UP',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: TextSize.buttonText,
+                                fontWeight: FontWeight.bold),
+                          )),
                     ),
                   ],
                 ),
@@ -223,9 +222,7 @@ class SignupScreen extends StatelessWidget {
 
                 ///Google Login Button
                 SolidButton(
-                    onTap: () async {
-                      await authProvider.signInWithGoogle(fromPage);
-                    },
+                    onTap: () async => await authProvider.signInWithGoogle(fromPage),
                     backgroundColor: AppColor.googleButtonColor,
                     child: Row(
                       children: [
@@ -236,7 +233,7 @@ class SignupScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border:
-                                  Border.all(color: AppColor.googleButtonColor),
+                              Border.all(color: AppColor.googleButtonColor),
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(5),
                                 bottomLeft: Radius.circular(5),
@@ -297,6 +294,6 @@ class SignupScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ),);
   }
 }

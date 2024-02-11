@@ -16,7 +16,6 @@ import '../../../../core/utils/validator.dart';
 import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../model/login_response_model.dart';
-import '../repository/auth_repository.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   bool loading = false;
@@ -38,6 +37,12 @@ class AuthenticationProvider extends ChangeNotifier {
   late UserCredential? googleUserCredential;
   late UserCredential? facebookUserCredential;
 
+  ///Errors
+  String? emailError;
+  String? passwordError;
+  String? confirmPasswordError;
+  String? phoneError;
+
   ///Functions::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   void clearAllData() {
     loading = false;
@@ -46,6 +51,38 @@ class AuthenticationProvider extends ChangeNotifier {
     confirmPasswordController.clear();
     nameController.clear();
     phoneController.clear();
+  }
+
+  void setSignupErrorMessage(Map<String, dynamic> errorMap){
+    if(errorMap['email']!=null){
+      emailError = errorMap['email'].first;
+    }if(errorMap['phone']!=null){
+    phoneError = errorMap['phone'].first;
+    }if(errorMap['password']!=null){
+    passwordError = errorMap['password'].first;
+    }if(errorMap['password_confirmation']!=null){
+    confirmPasswordError = errorMap['password_confirmation'].first;
+    }
+  }
+  void setSignInErrorMessage(Map<String, dynamic> errorMap){
+    if(errorMap['email']!=null){
+      emailError = errorMap['email'].first;
+    }if(errorMap['password']!=null){
+    passwordError = errorMap['password'].first;
+    }
+  }
+  void setResetPasswordErrorMsg(Map<String, dynamic> errorMap){
+    if(errorMap['email']!=null){
+      emailError = errorMap['email'].first;
+    }
+  }
+
+  void clearErrorMessage(){
+    emailError = null;
+    phoneError = null;
+    passwordError = null;
+    confirmPasswordError = null;
+    notifyListeners();
   }
 
   void clearPassword() {
@@ -64,25 +101,27 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> signupButtonOnTap(String fromPage) async {
+    clearErrorMessage();
     debugPrint('Triggered from $fromPage');
     ApiService.instance.clearAccessToken();
     if (!signupFormKey.currentState!.validate()) {
       return;
     }
     if (!validateEmail(emailController.text)) {
-      showToast('Invalid email address');
+      emailError = 'Invalid email address';
       return;
     }
     if (!validatePassword(passwordController.text)) {
-      showToast('Password must be at least 8 characters');
+      passwordError = 'Password must be at least 8 characters';
       return;
     }
     if (!validatePassword(confirmPasswordController.text)) {
-      showToast('Password must be at least 8 characters');
+      confirmPasswordError = 'Password must be at least 8 characters';
       return;
     }
     if (passwordController.text != confirmPasswordController.text) {
-      showToast('Password does\'nt match');
+      passwordError = 'Password does\'nt match';
+      confirmPasswordError = 'Password does\'nt match';
       return;
     }
     loading = true;
@@ -124,17 +163,21 @@ class AuthenticationProvider extends ChangeNotifier {
       debugPrint('Message: ${apiException.message}');
       debugPrint('Errors: ${apiException.errors}');
       showToast(apiException.message);
+      setSignupErrorMessage(apiException.errors??{});
     });
+    loading = false;
+    notifyListeners();
   }
 
   Future<void> signInButtonOnTap(String fromPage) async {
+    clearErrorMessage();
     debugPrint('Triggered from $fromPage');
     ApiService.instance.clearAccessToken();
     if (!signInFormKey.currentState!.validate()) {
       return;
     }
     if (!validateEmail(emailController.text)) {
-      showToast('Invalid email address');
+      emailError = 'Invalid email address';
       return;
     }
 
@@ -175,6 +218,7 @@ class AuthenticationProvider extends ChangeNotifier {
       debugPrint('Message: ${apiException.message}');
       debugPrint('Errors: ${apiException.errors}');
       showToast(apiException.message);
+      setSignInErrorMessage(apiException.errors??{});
     });
     loading = false;
     notifyListeners();
@@ -329,7 +373,7 @@ class AuthenticationProvider extends ChangeNotifier {
       return;
     }
     if (!validateEmail(emailController.text)) {
-      showToast('Invalid email address');
+      emailError = 'Invalid email address';
       return;
     }
     loading = true;
@@ -350,6 +394,7 @@ class AuthenticationProvider extends ChangeNotifier {
       debugPrint('Message: ${apiException.message}');
       debugPrint('Errors: ${apiException.errors}');
       showToast(apiException.message);
+      setResetPasswordErrorMsg(apiException.errors??{});
     });
     loading = false;
     notifyListeners();

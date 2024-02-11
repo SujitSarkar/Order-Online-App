@@ -53,6 +53,7 @@ class SignInScreen extends StatelessWidget {
                   hintText: 'Enter your email',
                   required: true,
                   textInputType: TextInputType.emailAddress,
+                  validationErrorMessage: authProvider.emailError,
                 ),
                 const SizedBox(height: 20),
                 TextFormFieldWidget(
@@ -61,6 +62,7 @@ class SignInScreen extends StatelessWidget {
                   labelText: 'Password',
                   hintText: 'Enter your password',
                   required: true,
+                  validationErrorMessage: authProvider.passwordError,
                 ),
 
                 ///Remember Me
@@ -80,10 +82,8 @@ class SignInScreen extends StatelessWidget {
                             })),
                     Expanded(
                       child: InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, AppRouter.forgotPassword);
-                        },
+                        onTap: () => Navigator.pushNamed(
+                            context, AppRouter.forgotPassword),
                         child: const Text(
                           'FORGOT PASSWORD?',
                           style: TextStyle(
@@ -103,9 +103,7 @@ class SignInScreen extends StatelessWidget {
                     Expanded(
                       flex: 1,
                       child:  SolidButton(
-                          onTap: () async {
-                            Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home);
-                          },
+                          onTap: () async => Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home),
                           backgroundColor: AppColor.disableColor,
                           child: const Text(
                             'HOME',
@@ -119,9 +117,7 @@ class SignInScreen extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: SolidButton(
-                          onTap: () async {
-                            await authProvider.signInButtonOnTap(fromPage);
-                          },
+                          onTap: () async => await authProvider.signInButtonOnTap(fromPage),
                           child: authProvider.loading
                               ? const LoadingWidget(color: Colors.white)
                               : const Text(
@@ -181,9 +177,7 @@ class SignInScreen extends StatelessWidget {
 
                 ///Google Login Button
                 SolidButton(
-                    onTap: () async{
-                      await authProvider.signInWithGoogle(fromPage);
-                    },
+                    onTap: () async => await authProvider.signInWithGoogle(fromPage),
                     backgroundColor: AppColor.googleButtonColor,
                     child: Row(
                       children: [
@@ -219,9 +213,7 @@ class SignInScreen extends StatelessWidget {
 
                 ///Facebook Login Button
                 SolidButton(
-                    onTap: () async{
-
-                    },
+                    onTap: () async{},
                     backgroundColor: AppColor.facebookButtonColor,
                     child: Row(
                       children: [

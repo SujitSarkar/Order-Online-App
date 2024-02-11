@@ -94,12 +94,10 @@ class HomeProvider extends ChangeNotifier {
       }
     }, onError: (error) {
       ApiException apiException = error as ApiException;
-      debugPrint('Message: {ApiException.message}');
+      debugPrint('Message: ${apiException.message}');
       debugPrint('Errors: ${apiException.errors}');
       showToast(apiException.message);
     });
-
-
     notifyListeners();
   }
 

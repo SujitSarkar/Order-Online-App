@@ -21,6 +21,7 @@ class TextFormFieldWidget extends StatefulWidget {
       this.prefixColor,
       this.maxLine,
       this.minLine,
+      this.validationErrorMessage,
       this.suffixOnTap,
       this.prefixOnTap,
       this.onChanged,
@@ -43,6 +44,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final bool readOnly;
   final int? maxLine;
   final int? minLine;
+  final String? validationErrorMessage;
   final Function()? onTap;
   final Function(String)? onChanged;
   final Function()? onEditingComplete;
@@ -88,6 +90,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           fontSize: 14),
       decoration: InputDecoration(
           alignLabelWithHint: true,
+          errorText: widget.validationErrorMessage,
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               borderSide: BorderSide(

@@ -48,14 +48,13 @@ class ForgotPasswordScreen extends StatelessWidget {
                   hintText: 'Enter your email',
                   required: true,
                   textInputType: TextInputType.emailAddress,
+                  validationErrorMessage: authProvider.emailError,
                 ),
                 const SizedBox(height: 20),
 
                 ///Login Button
                 SolidButton(
-                    onTap: () async {
-                      await authProvider.resetPasswordButtonOnTap();
-                    },
+                    onTap: () async => await authProvider.resetPasswordButtonOnTap(),
                     child: authProvider.loading
                         ? const LoadingWidget(color: Colors.white)
                         : const Text(
