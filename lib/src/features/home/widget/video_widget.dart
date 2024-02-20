@@ -1,9 +1,9 @@
-// import 'package:flutter/Material.dart';
-// import 'package:order_online_app/core/constants/app_color.dart';
-// import 'package:order_online_app/core/widgets/loading_widget.dart';
-// import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 // import 'package:provider/provider.dart';
 // import 'package:video_player/video_player.dart';
+// import 'package:flutter/Material.dart';
+// import '../../../../core/constants/app_color.dart';
+// import '../../../../core/widgets/loading_widget.dart';
+// import '../../../../src/features/home/provider/home_provider.dart';
 //
 // class VideoWidget extends StatefulWidget {
 //   const VideoWidget({super.key, required this.videoUrl});

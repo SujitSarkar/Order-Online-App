@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:order_online_app/core/utils/app_toast.dart';
-import 'package:order_online_app/core/utils/local_storage.dart';
-import 'package:order_online_app/src/features/authentication/model/logout_response_model.dart';
+import '../../../../core/utils/app_toast.dart';
+import '../../../../core/utils/local_storage.dart';
 import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
+import '../model/logout_response_model.dart';
 
 class AuthRepository {
   Future<void> logout() async {
