@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:order_online_app/core/router/app_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../shared/api/web_endpoint.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/solid_button.dart';

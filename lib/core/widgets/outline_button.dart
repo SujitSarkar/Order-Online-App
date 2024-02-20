@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 
 class OutlineButton extends StatelessWidget {
   const OutlineButton(
-      {Key? key,
+      {super.key,
       required this.onTap,
       required this.child,
       this.width,
       this.backgroundColor,
       this.borderRadius,
       this.splashColor,
-      this.borderColor})
-      : super(key: key);
+      this.borderColor});
   final Function() onTap;
   final Widget child;
   final double? width;

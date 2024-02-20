@@ -2,11 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:order_online_app/core/constants/app_string.dart';
-import 'package:order_online_app/src/features/authentication/model/reset_password_model.dart';
-import 'package:order_online_app/src/features/home/provider/home_provider.dart';
-import 'package:order_online_app/src/features/webview/webview_provider.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
@@ -15,7 +12,10 @@ import '../../../../core/utils/local_storage.dart';
 import '../../../../core/utils/validator.dart';
 import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
+import '../../home/provider/home_provider.dart';
+import '../../webview/webview_provider.dart';
 import '../model/login_response_model.dart';
+import '../model/reset_password_model.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   bool loading = false;

@@ -1,10 +1,10 @@
 import 'package:flutter/Material.dart';
-import 'package:order_online_app/core/constants/app_color.dart';
-import 'package:order_online_app/core/constants/app_string.dart';
-import 'package:order_online_app/core/utils/extensions.dart';
-import 'package:order_online_app/core/widgets/solid_button.dart';
-import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/app_color.dart';
+import '../../../../core/constants/app_string.dart';
+import '../../../../core/utils/extensions.dart';
+import '../../../../core/widgets/solid_button.dart';
+import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../shared/api/web_endpoint.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/validator.dart';

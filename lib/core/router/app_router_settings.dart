@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:order_online_app/src/features/home/screen/home_screen.dart';
-import 'package:order_online_app/src/features/privacy/privacy_and_terms_screen.dart';
 import '../../src/features/authentication/view/forgot_password_screen.dart';
 import '../../src/features/authentication/view/signup_screen.dart';
 import '../../src/features/authentication/view/signin_screen.dart';
+import '../../src/features/home/screen/home_screen.dart';
+import '../../src/features/privacy/privacy_and_terms_screen.dart';
 import '../../src/features/splash/splash_screen.dart';
 import '../../src/features/webview/webview_screen.dart';
 import '../widgets/no_internet_screen.dart';

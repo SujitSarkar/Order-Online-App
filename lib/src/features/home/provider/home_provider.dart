@@ -1,15 +1,15 @@
 import 'package:flutter/Material.dart';
-import 'package:order_online_app/core/utils/app_toast.dart';
-import 'package:order_online_app/shared/api/api_endpoint.dart';
-import 'package:order_online_app/src/features/authentication/repository/auth_repository.dart';
-import 'package:order_online_app/src/features/home/model/settings_data_model.dart';
 // import 'package:video_player/video_player.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
+import '../../../../core/utils/app_toast.dart';
 import '../../../../core/utils/local_storage.dart';
+import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../../authentication/model/login_response_model.dart';
+import '../../authentication/repository/auth_repository.dart';
+import '../model/settings_data_model.dart';
 
 class HomeProvider extends ChangeNotifier {
   bool loading = false;
