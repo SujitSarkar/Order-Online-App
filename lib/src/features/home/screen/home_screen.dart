@@ -70,11 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             iconTheme: const IconThemeData(color: Colors.white),
           titleSpacing: 8.0,
         ),
-        drawer: Drawer(
-          backgroundColor: Colors.black54,
-          width: size.width,
-          child: const DrawerWidget(),
-        ),
+        drawer: const DrawerWidget(),
         body: homeProvider.loading
             ? const Center(child: LoadingWidget())
             : Column(
@@ -296,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     MaskWidget(
                                       height: size.height * .25,
                                       child: const Text(
-                                        'LOYALTY POINT',
+                                        'LOYALTY POINTS',
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
                                             height: 1,
@@ -329,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       MaskWidget(
                                         height: size.height * .25,
                                         child: const Text(
-                                          'MY ORDER',
+                                          'MY ORDERS',
                                           textAlign: TextAlign.end,
                                           style: TextStyle(
                                               height: 1,

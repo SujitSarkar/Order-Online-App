@@ -16,144 +16,148 @@ class DrawerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
 
-    return SafeArea(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height -
-            MediaQuery.of(context).padding.top,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                onPressed: () => Scaffold.of(context).closeDrawer(),
-                icon: const Icon(Icons.close,
-                    color: Colors.white, size: 30),
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+    return Drawer(
+      backgroundColor: Colors.black54,
+      child: SafeArea(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top,
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * .08),
-                InkWell(
-                    onTap: () =>
-                        homeProvider.popAndNavigateToWebPage('', context),
-                    child: const Text(
-                      'HOME',
-                      style: TextStyle(color: Colors.white, fontSize: 22),
-                    )),
-                const SizedBox(height: 28),
-                InkWell(
-                    onTap: () => homeProvider.popAndNavigateToWebPage(
-                        WebEndpoint.awards, context),
-                    child: const Text(
-                      'AWARDS',
-                      style: TextStyle(color: Colors.white, fontSize: 22),
-                    )),
-                const SizedBox(height: 28),
-                InkWell(
-                    onTap: () => homeProvider.popAndNavigateToWebPage(
-                        WebEndpoint.gallery, context),
-                    child: const Text(
-                      'GALLERY',
-                      style: TextStyle(color: Colors.white, fontSize: 22),
-                    )),
-                const SizedBox(height: 28),
-                InkWell(
-                    onTap: () => homeProvider.popAndNavigateToWebPage(
-                        WebEndpoint.contact, context),
-                    child: const Text(
-                      'CONTACT',
-                      style: TextStyle(color: Colors.white, fontSize: 22),
-                    )),
-                const SizedBox(height: 28),
-                homeProvider.loginResponseModel?.data?.accessToken == null
-                    ? InkWell(
-                        onTap: () {
-                          Scaffold.of(context).closeDrawer();
-                          Navigator.pushNamed(context, AppRouter.signIn,
-                              arguments: AppString.fromPageList.first);
-                        },
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    onPressed: () => Scaffold.of(context).closeDrawer(),
+                    icon: const Icon(Icons.close,
+                        color: Colors.white, size: 30),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * .08),
+                    InkWell(
+                        onTap: () =>
+                            homeProvider.popAndNavigateToWebPage('', context),
                         child: const Text(
-                          'LOGIN',
+                          'HOME',
                           style: TextStyle(color: Colors.white, fontSize: 22),
-                        ))
-                    : Column(
-                      children: [
-                        InkWell(
-                            onTap: () async {
+                        )),
+                    const SizedBox(height: 28),
+                    InkWell(
+                        onTap: () => homeProvider.popAndNavigateToWebPage(
+                            WebEndpoint.awards, context),
+                        child: const Text(
+                          'AWARDS',
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        )),
+                    const SizedBox(height: 28),
+                    InkWell(
+                        onTap: () => homeProvider.popAndNavigateToWebPage(
+                            WebEndpoint.gallery, context),
+                        child: const Text(
+                          'GALLERY',
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        )),
+                    const SizedBox(height: 28),
+                    InkWell(
+                        onTap: () => homeProvider.popAndNavigateToWebPage(
+                            WebEndpoint.contact, context),
+                        child: const Text(
+                          'CONTACT',
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        )),
+                    const SizedBox(height: 28),
+                    homeProvider.loginResponseModel?.data?.accessToken == null
+                        ? InkWell(
+                            onTap: () {
                               Scaffold.of(context).closeDrawer();
-                              await homeProvider.logoutButtonOnTap();
+                              Navigator.pushNamed(context, AppRouter.signIn,
+                                  arguments: AppString.fromPageList.first);
                             },
                             child: const Text(
-                              'LOGOUT',
+                              'LOGIN',
                               style: TextStyle(color: Colors.white, fontSize: 22),
-                            )),
-                        const SizedBox(height: 28),
+                            ))
+                        : Column(
+                          children: [
+                            InkWell(
+                                onTap: () async {
+                                  Scaffold.of(context).closeDrawer();
+                                  await homeProvider.logoutButtonOnTap();
+                                },
+                                child: const Text(
+                                  'LOGOUT',
+                                  style: TextStyle(color: Colors.white, fontSize: 22),
+                                )),
+                            const SizedBox(height: 28),
 
-                        InkWell(
-                          onTap: (){
-                            homeProvider.popAndNavigateToWebPage(
-                                WebEndpoint.profileUrl, context);
-                          },
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: AppColor.secondaryColor,
-                              borderRadius: const BorderRadius.all(Radius.circular(50)),
-                              border: Border.all(color: Colors.white,width: 1)
+                            InkWell(
+                              onTap: (){
+                                homeProvider.popAndNavigateToWebPage(
+                                    WebEndpoint.profileUrl, context);
+                              },
+                              child: Container(
+                                height: 45,
+                                width: 45,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColor.secondaryColor,
+                                  borderRadius: const BorderRadius.all(Radius.circular(50)),
+                                  border: Border.all(color: Colors.white,width: 1)
+                                ),
+                                child: Text(homeProvider.loginResponseModel!.data!.user!.name![0].toUpperCase(),
+                                  style: const TextStyle(color: Colors.white,fontSize: 28),),
+                              ),
                             ),
-                            child: Text(homeProvider.loginResponseModel!.data!.user!.name![0].toUpperCase(),
-                              style: const TextStyle(color: Colors.white,fontSize: 28),),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                const SizedBox(height: 28),
-                if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
-                  SolidButton(
-                      onTap: () async {
-                        if (homeProvider.settingsDataModel!.data!
-                            .redirectLinkOrder!.isLinkValidate) {
-                          await openUrlOnExternal(homeProvider
-                              .settingsDataModel!.data!.redirectLinkOrder!);
-                        } else {
-                          homeProvider.popAndNavigateToWebPage(
-                              WebEndpoint.orderUrl, context);
-                        }
-                      },
-                      backgroundColor: Colors.white,
-                      width: 200,
-                      borderRadius: const BorderRadius.all(Radius.circular(50)),
-                      child: const Text(
-                        'Order Online',
-                        style: TextStyle(
-                            fontSize: 22, color: AppColor.primaryColor),
-                      )),
-                const SizedBox(height: 28),
-                if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
-                  SolidButton(
-                      onTap: () async{
-                        if (homeProvider.settingsDataModel!.data!.redirectLinkReservation!.isLinkValidate) {
-                          await openUrlOnExternal(homeProvider.settingsDataModel!.data!.redirectLinkReservation!);
-                        } else {
-                          homeProvider.popAndNavigateToWebPage(WebEndpoint.reservationUrl,context);
-                        }
-                      },
-                      backgroundColor: Colors.white,
-                      width: 200,
-                      borderRadius: const BorderRadius.all(Radius.circular(50)),
-                      child: const Text(
-                        'Reservation',
-                        style: TextStyle(
-                            fontSize: 22, color: AppColor.primaryColor),
-                      )),
+                    const SizedBox(height: 28),
+                    if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
+                      SolidButton(
+                          onTap: () async {
+                            if (homeProvider.settingsDataModel!.data!
+                                .redirectLinkOrder!.isLinkValidate) {
+                              await openUrlOnExternal(homeProvider
+                                  .settingsDataModel!.data!.redirectLinkOrder!);
+                            } else {
+                              homeProvider.popAndNavigateToWebPage(
+                                  WebEndpoint.orderUrl, context);
+                            }
+                          },
+                          backgroundColor: Colors.white,
+                          width: 200,
+                          borderRadius: const BorderRadius.all(Radius.circular(50)),
+                          child: const Text(
+                            'Order Online',
+                            style: TextStyle(
+                                fontSize: 22, color: AppColor.primaryColor),
+                          )),
+                    const SizedBox(height: 28),
+                    if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
+                      SolidButton(
+                          onTap: () async{
+                            if (homeProvider.settingsDataModel!.data!.redirectLinkReservation!.isLinkValidate) {
+                              await openUrlOnExternal(homeProvider.settingsDataModel!.data!.redirectLinkReservation!);
+                            } else {
+                              homeProvider.popAndNavigateToWebPage(WebEndpoint.reservationUrl,context);
+                            }
+                          },
+                          backgroundColor: Colors.white,
+                          width: 200,
+                          borderRadius: const BorderRadius.all(Radius.circular(50)),
+                          child: const Text(
+                            'Reservation',
+                            style: TextStyle(
+                                fontSize: 22, color: AppColor.primaryColor),
+                          )),
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
-          child: Image.asset('assets/images/logo512.png',height:200,width:200)),
+          child: Image.asset('assets/images/logo512.png',height:180,width:180)),
             // child: Text(AppString.appName,
             //     textAlign: TextAlign.center,
             //     style: TextStyle(color: Colors.white, fontSize: 40,fontWeight: FontWeight.bold))),
