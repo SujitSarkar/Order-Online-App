@@ -51,3 +51,8 @@ flutter:
           weight: 500
         - asset: assets/font/Inter-SemiBold.ttf
           weight: 600
+
+    - family: dosis
+      fonts:
+        - asset: assets/font/Dosis-Regular.ttf
+          weight: 500

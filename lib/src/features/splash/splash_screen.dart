@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:order_online_app/src/features/home/provider/home_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../core/router/app_router.dart';
+import '../home/provider/home_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,10 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
-          child: Image.asset('assets/images/logo512.png',height:200,width:200)),
-            // child: Text(AppString.appName,
-            //     textAlign: TextAlign.center,
-            //     style: TextStyle(color: Colors.white, fontSize: 40,fontWeight: FontWeight.bold))),
+          child: Image.asset('assets/images/logo512.png',height:180,width:180)),
     );
   }
 }

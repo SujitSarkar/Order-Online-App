@@ -10,6 +10,7 @@ class AppColor {
   static const Color warningColor = Color.fromARGB(255, 217, 155, 9);
 
   static const Color appBodyBg = Color(0xffF5F0F0);
+  static const Color homeBodyBg = Color(0xff1E1E1E);
   static const Color appbarBgColor = primaryColor;
   static const Color cardColor = Color(0xffFFFFFF);
   static const Color bottomSheetColor = Color(0xffFFFFFF);

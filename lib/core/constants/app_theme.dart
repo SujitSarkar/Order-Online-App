@@ -57,20 +57,34 @@ class AppTheme {
       bottomSheetTheme:
           const BottomSheetThemeData(modalBackgroundColor: Colors.transparent),
       fontFamily: AppString.fontName,
-      textTheme: const TextTheme(
-          displayLarge: TextStyle(fontFamily: AppString.fontName),
-          displayMedium: TextStyle(fontFamily: AppString.fontName),
-          displaySmall: TextStyle(fontFamily: AppString.fontName),
-          headlineMedium: TextStyle(fontFamily: AppString.fontName),
-          headlineSmall: TextStyle(fontFamily: AppString.fontName),
-          titleLarge: TextStyle(fontFamily: AppString.fontName),
-          titleMedium: TextStyle(fontFamily: AppString.fontName),
-          titleSmall: TextStyle(fontFamily: AppString.fontName),
-          bodyLarge: TextStyle(fontFamily: AppString.fontName),
-          bodyMedium: TextStyle(fontFamily: AppString.fontName),
-          bodySmall: TextStyle(fontFamily: AppString.fontName),
-          labelLarge: TextStyle(fontFamily: AppString.fontName),
-          labelSmall: TextStyle(fontFamily: AppString.fontName)));
+      textTheme: TextTheme(
+        displayLarge: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        displayMedium: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        displaySmall: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        headlineMedium: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        headlineSmall: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        titleLarge: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        titleMedium: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        titleSmall: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        bodyLarge: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        bodyMedium: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        bodySmall: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        labelLarge: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+        labelSmall: TextStyle(
+            fontFamily: AppString.fontName, color: AppColor.textColor),
+      ));
 
   static var deviceOrientation = SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

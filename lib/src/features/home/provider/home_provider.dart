@@ -1,8 +1,10 @@
 import 'package:flutter/Material.dart';
-import 'package:order_online_app/core/utils/app_toast.dart';
-import 'package:order_online_app/shared/api/api_endpoint.dart';
-import 'package:order_online_app/src/features/authentication/repository/auth_repository.dart';
-import 'package:order_online_app/src/features/home/model/settings_data_model.dart';
+import 'package:flutter/services.dart';
+import '../../../../core/constants/app_color.dart';
+import '../../../../core/utils/app_toast.dart';
+import '../../../../shared/api/api_endpoint.dart';
+import '../../../../src/features/authentication/repository/auth_repository.dart';
+import '../../../../src/features/home/model/settings_data_model.dart';
 // import 'package:video_player/video_player.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/router/app_router.dart';
@@ -125,4 +127,29 @@ class HomeProvider extends ChangeNotifier {
   // void disposeVideo() {
   //   videoController.dispose();
   // }
+
+  Future<dynamic> appExitDialog(BuildContext context)async{
+    final shouldExit = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColor.homeBodyBg,
+        title: const Text(
+          'Do you want to exit?',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child:
+            const Text('No', style: TextStyle(color: Colors.green)),
+          ),
+          TextButton(
+            onPressed: () => SystemNavigator.pop(),
+            child: const Text('Yes', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    return shouldExit;
+  }
 }
