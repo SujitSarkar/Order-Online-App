@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 class AppRouter {
   static const String initializer = '/';
   static const String home = '/home';

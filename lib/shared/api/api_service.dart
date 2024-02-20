@@ -36,14 +36,16 @@ class ApiService {
   Future<void> apiCall(
       {required Function execute,
       required Function(dynamic) onSuccess,
-      Function(dynamic)? onError,
-      Function? onLoading}) async {
+      Function(dynamic)? onError}) async {
     try {
-      if (onLoading != null) onLoading();
       // hide keyboard
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       var response = await execute();
       return onSuccess(response);
+    }on SocketException{
+      if (onError == null) return;
+      onError(ApiException(message: 'No internet connection'));
+      return;
     } catch (error) {
       if (onError == null) return;
       onError(error);
@@ -94,8 +96,12 @@ class ApiService {
         throw ApiException(message: jsonData['message'], errors: jsonData['errors']);
       }
     } else {
-      var jsonData = jsonDecode(response.body);
-      throw ApiException(message: jsonData['message'], errors: jsonData['errors']);
+      try {
+        var jsonData = jsonDecode(response.body);
+        throw ApiException(message: jsonData['message'], errors: jsonData['errors']);
+      } catch (e) {
+        throw ApiException(message: 'Invalid data format');
+      }
     }
   }
 }

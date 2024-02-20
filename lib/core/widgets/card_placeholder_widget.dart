@@ -9,9 +9,9 @@ class CardPlaceholderWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: height,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade300,
-        borderRadius: const BorderRadius.all(Radius.circular(10))
+      decoration: const BoxDecoration(
+        color: Colors.grey,
+        borderRadius: BorderRadius.all(Radius.circular(10))
       ),
     );
   }

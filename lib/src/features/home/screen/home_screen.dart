@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
@@ -38,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
         if (homeProvider.canPop()) {
           Navigator.pop(context);
         } else {
-          // ignore: use_build_context_synchronously
           final shouldExit = await homeProvider.appExitDialog(context);
           return shouldExit ?? false;
         }
@@ -150,8 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           return Container(
                                             width: double.infinity,
                                             height: size.height * .25,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade300,
+                                            decoration: const BoxDecoration(
+                                              color: Colors.grey,
                                             ),
                                             child: CachedNetworkImage(
                                               imageUrl: mediaUrl,
