@@ -54,8 +54,6 @@ class User {
   final String? email;
   final DateTime? emailVerifiedAt;
   final String? phone;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
   final List<String>? aclGroups;
   final List<String>? permissions;
   final List<Address>? addresses;
@@ -67,8 +65,6 @@ class User {
     this.email,
     this.emailVerifiedAt,
     this.phone,
-    this.createdAt,
-    this.updatedAt,
     this.aclGroups,
     this.permissions,
     this.addresses,
@@ -81,8 +77,6 @@ class User {
     email: json["email"],
     emailVerifiedAt: json["email_verified_at"] == null ? null : DateTime.parse(json["email_verified_at"]),
     phone: json["phone"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     aclGroups: json["aclGroups"] == null ? [] : List<String>.from(json["aclGroups"]!.map((x) => x)),
     permissions: json["permissions"] == null ? [] : List<String>.from(json["permissions"]!.map((x) => x)),
     addresses: json["addresses"] == null ? [] : List<Address>.from(json["addresses"]!.map((x) => Address.fromJson(x))),
@@ -95,8 +89,6 @@ class User {
     "email": email,
     "email_verified_at": emailVerifiedAt?.toIso8601String(),
     "phone": phone,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
     "aclGroups": aclGroups == null ? [] : List<dynamic>.from(aclGroups!.map((x) => x)),
     "permissions": permissions == null ? [] : List<dynamic>.from(permissions!.map((x) => x)),
     "addresses": addresses == null ? [] : List<dynamic>.from(addresses!.map((x) => x.toJson())),
@@ -115,8 +107,6 @@ class Address {
   final String? postcode;
   final String? note;
   final bool? isDefault;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 
   Address({
     this.id,
@@ -129,8 +119,6 @@ class Address {
     this.postcode,
     this.note,
     this.isDefault,
-    this.createdAt,
-    this.updatedAt,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
@@ -144,8 +132,6 @@ class Address {
     postcode: json["postcode"],
     note: json["note"],
     isDefault: json["is_default"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -159,7 +145,5 @@ class Address {
     "postcode": postcode,
     "note": note,
     "is_default": isDefault,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
   };
 }

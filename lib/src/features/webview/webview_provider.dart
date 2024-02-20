@@ -41,8 +41,6 @@ class WebViewProvider extends ChangeNotifier {
         connected = true;
       } else if (result == ConnectivityResult.wifi) {
         connected = true;
-      } else if (result == ConnectivityResult.ethernet) {
-        connected = true;
       } else {
         connected = false;
       }

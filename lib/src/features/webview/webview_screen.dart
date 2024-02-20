@@ -117,9 +117,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
             if (!webViewProvider.connected) const NoInternetScreen(),
 
             ///Back Button
-            if(webViewProvider.connected)
+            // if(webViewProvider.connected)
               Positioned(
-                top: 65,
+                top:webViewProvider.connected? 65:4,
                 left: 10,
                 child: InkWell(
                   onTap: () async => Navigator.popUntil(context, (route) => route.settings.name == AppRouter.home),

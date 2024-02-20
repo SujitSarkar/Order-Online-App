@@ -113,7 +113,7 @@ class DrawerWidget extends StatelessWidget {
                         ],
                       ),
                   const SizedBox(height: 28),
-                  if (homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
+                  if (homeProvider.settingsDataModel!=null && homeProvider.settingsDataModel!.data!.orderStatus.isEnabled)
                     SolidButton(
                         onTap: () async {
                           if (homeProvider.settingsDataModel!.data!
@@ -134,7 +134,7 @@ class DrawerWidget extends StatelessWidget {
                               fontSize: 22, color: AppColor.primaryColor),
                         )),
                   const SizedBox(height: 28),
-                  if (homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
+                  if (homeProvider.settingsDataModel!=null && homeProvider.settingsDataModel!.data!.reservationStatus.isEnabled)
                     SolidButton(
                         onTap: () async{
                           if (homeProvider.settingsDataModel!.data!.redirectLinkReservation!.isLinkValidate) {
