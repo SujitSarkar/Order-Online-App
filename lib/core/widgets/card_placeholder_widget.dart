@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 
 class CardPlaceholderWidget extends StatelessWidget {
   const CardPlaceholderWidget({super.key,required this.height});

@@ -1,6 +1,6 @@
 // import 'package:provider/provider.dart';
 // import 'package:video_player/video_player.dart';
-// import 'package:flutter/Material.dart';
+// import 'package:flutter/material.dart';
 // import '../../../../core/constants/app_color.dart';
 // import '../../../../core/widgets/loading_widget.dart';
 // import '../../../../src/features/home/provider/home_provider.dart';

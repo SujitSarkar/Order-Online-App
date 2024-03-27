@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/widgets/loading_widget.dart';

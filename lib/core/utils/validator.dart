@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 bool validateEmail(String emailAddress) => RegExp(

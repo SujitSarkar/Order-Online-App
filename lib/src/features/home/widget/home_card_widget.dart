@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:order_online_app/core/constants/app_string.dart';
 import '../../../../core/widgets/card_placeholder_widget.dart';
 import '../../../../core/widgets/mask_widget.dart';

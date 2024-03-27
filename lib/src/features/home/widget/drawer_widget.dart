@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
